@@ -44,7 +44,8 @@
                                             <a :href="vo.reprint_url" target="_blank">{{ vo.reprint_url }}</a>
                                         </p>
                                     </blockquote>
-                                    {{ vo.content }}
+                                    <div class="markdown-body editormd-html-preview" v-html="markdown_2_html(vo.content)">
+                                    </div>
                                 </div>
                                 <div class="show_all"></div>
                                 <p class="more m-b-none m-t-md">
@@ -67,23 +68,39 @@
     </section>
 </template>
 <script>
+import util from 'util';
+var marked = require('marked');
 export default {
     data() {
         return {
             article: [
-                
+
             ],
             length: 5
         }
     },
     methods: {
-        get_lists(){
-            var start = this.$route.params.page;
+        get_lists() {
+            var start = this.$route.params.page || 0;
             var length = 5;
+            this.$http.get(util.format('/article/get_lists/%s/%s', start, length)).then(result => {
+                this.article = result.data;
+            }, err => {
+
+            })
+        },
+        markdown_2_html(md){
+            return marked(md)
+        }
+    },
+    filters: {
+        markdown_2_html: function(md) {
+            return marked(md);
         }
     },
     mounted() {
         console.log(this.article)
+        this.get_lists();
     }
 }
 </script>

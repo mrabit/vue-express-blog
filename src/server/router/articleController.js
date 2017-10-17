@@ -18,6 +18,7 @@ router.get('/get_lists/:start/:length', function(req, res) {
         length: parseInt(req.params.length) || 5
     }
     Article.get_article_lists(params).then(result => {
+        console.log(result)
         res.json(result);
     }, err => {
         res.end(err);

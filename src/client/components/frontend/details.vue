@@ -25,10 +25,10 @@
                                     <time :datetime="article.create_time">{{ article.release_time }}</time>
                                 </div>
                                 <!-- <div class="meta">
-                                                                            <small class="text-muted">
-                                                                                <span id="changyan_count_unit"></span> Comments</small>
-                                                                            <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
-                                                                        </div> -->
+                                                                                    <small class="text-muted">
+                                                                                        <span id="changyan_count_unit"></span> Comments</small>
+                                                                                    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+                                                                                </div> -->
                             </div>
                         </div>
                         <div class="row">
@@ -41,7 +41,8 @@
                                     </blockquote>
                                     <!--遗留问题  数据库存在以前编辑器的文章 需判断-->
 
-                                    <div id="editormd" class="markdown-body editormd-html-preview" v-if="!article.is_html" v-html="marked_to_html">
+                                    <div id="editormd" v-if="!article.is_html">
+                                        <textarea name="editormd" style="display: none" v-html="article.content"></textarea>
                                     </div>
                                     <div v-else v-html="article.content">
                                     </div>
@@ -125,12 +126,25 @@ export default {
                 this.article = response.data.article[0];
                 this.adjoin = response.data.adjoin;
                 document.title = response.data.article[0].title;
+                debugger;
+                var a = editormd.markdownToHTML("editormd", {
+                    htmlDecode: "style,script,iframe",  // you can filter tags decode
+                    emoji: true,
+                    taskList: true,
+                    tex: true,  // 默认不解析
+                    flowChart: true,  // 默认不解析
+                    sequenceDiagram: true,  // 默认不解析
+                });
                 this.show = true;
             });
         }
     },
     mounted() {
-        this.get_article_details();
+        this.$nextTick(function() {
+            // Code that will run only after the
+            // entire view has been rendered
+            this.get_article_details();
+        })
     }
 }
 </script>

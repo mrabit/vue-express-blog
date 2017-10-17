@@ -19,9 +19,20 @@ module.exports = merge(baseWebpackConfig, {
     module: {
         rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
     },
+    externals: {
+        'jquery': 'window.jQuery',
+        'editormd': "window.editormd",
+    }, //较大的库引用cdn文件
     // cheap-module-eval-source-map is faster for development
     devtool: '#cheap-module-eval-source-map',
     plugins: [
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery',
+            'window.$': 'jquery',
+            editormd: 'editormd',
+        }), //这个可以使jquery变成全局变量，不用在自己文件require('jquery')了
         new webpack.DefinePlugin({
             'process.env': config.dev.env
         }),
