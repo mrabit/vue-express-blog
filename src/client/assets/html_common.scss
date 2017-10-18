@@ -40,7 +40,7 @@ body {
 
 #sidebar {
     background-color: #202020;
-    height: 100vh;
+    height: 100%;
     color: #999;
     left: 0;
     overflow: auto;
@@ -49,6 +49,8 @@ body {
     top: 0;
     width: 250px;
     z-index: 1;
+    position: fixed;
+    top: 0;
 }
 
 .iconfont {

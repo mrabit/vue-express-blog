@@ -21,7 +21,7 @@ export default new Router({
             title: '首页 - 一桶浆糊的博客'
         }
     }, {
-        path: '/index/:pages.html',
+        path: '/index/:page.html',
         name: 'index',
         components: {
             default: (resolve) => void(require(['../components/frontend/index.vue'], resolve)),

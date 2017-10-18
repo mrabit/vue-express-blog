@@ -10,17 +10,22 @@
 .no-gutter.verticalCenter {
     min-height: inherit;
 }
+
+[v-cloak] {
+    display: none;
+}
 </style>
 <template>
-    <section class="content">
+    <section class="content" v-cloak>
         <div class="wrapper">
             <section class="row padder m-b-n-sm">
                 <div id="view" class="clearfix">
-                    <article class="col-xs-12 m-t-md" v-for="(vo, key) in article" :key="key">
+                    <loading :show="!article_lists.length"></loading>
+                    <article class="col-xs-12 m-t-md" v-show="article_lists.length" v-for="(vo, key) in article_lists" :key="key">
                         <div class="row verticalCenter no-gutter">
                             <div class="col-xs-12 col-sm-8 text-left">
                                 <p class="article-title h2">
-                                    <router-link :to="{ path: 'details/' + vo.id + '.html'}">{{ vo.title }}</router-link>
+                                    <router-link :to="{ path: '/details/' + vo.id + '.html'}">{{ vo.title }}</router-link>
                                 </p>
                             </div>
                             <div class="col-sm-4 hidden-xs text-right">
@@ -44,12 +49,15 @@
                                             <a :href="vo.reprint_url" target="_blank">{{ vo.reprint_url }}</a>
                                         </p>
                                     </blockquote>
-                                    <div class="markdown-body editormd-html-preview" v-html="markdown_2_html(vo.content)">
+                                    <div class="editormd_container" v-if="!is_html(vo.is_html)" :id="vo.id">
+                                        <textarea style="display: none" v-html="vo.content"></textarea>
+                                    </div>
+                                    <div v-else v-html="unescape(vo.content)">
                                     </div>
                                 </div>
                                 <div class="show_all"></div>
                                 <p class="more m-b-none m-t-md">
-                                    <router-link :to="{ path: 'details/' + vo.id + '.html'}">阅读全文 »</router-link>
+                                    <router-link :to="{ path: '/details/' + vo.id + '.html'}">阅读全文 »</router-link>
                                 </p>
                             </div>
                         </div>
@@ -57,8 +65,8 @@
                     </article>
                 </div>
                 <nav class="padder text-center" style="margin-bottom: 8px">
-                    <a name="prev" href="" class="pull-left">« 上一页</a>
-                    <a name="next" href="#" class="pull-right">下一页 »</a>
+                    <router-link name="prev" v-if="this.currentPage > 1" :to="'/index/' + (this.currentPage - 1) + '.html' + (this.tags_id?'?tags_id=' + this.tags_id : '')" class="pull-left">« 上一页</router-link>
+                    <router-link name="next" v-if="this.currentPage < this.totalPage" :to="'/index/' + (this.currentPage + 1) + '.html' + (this.tags_id?'?tags_id=' + this.tags_id : '')" class="pull-right">下一页 »</router-link>
                     <span class="w-sm text-center">
                         <router-link to="/archives.html">博客归档</router-link>
                     </span>
@@ -69,37 +77,85 @@
 </template>
 <script>
 import util from 'util';
-var marked = require('marked');
+import loading from './common/loading';
 export default {
+    components: {
+        loading
+    },
     data() {
         return {
-            article: [
+            article_lists: [
 
             ],
-            length: 5
+            length: 5,
+            totalPage: 0
         }
+    },
+    computed: {
+        currentPage() {
+            return parseInt(this.$route.params.page || 1);
+        },
+        tags_id() {
+            return this.$route.query.tags_id;
+        }
+    },
+    watch: {
+        "$route": "get_lists"
     },
     methods: {
         get_lists() {
-            var start = this.$route.params.page || 0;
+            var page = this.currentPage;
             var length = 5;
-            this.$http.get(util.format('/article/get_lists/%s/%s', start, length)).then(result => {
-                this.article = result.data;
+            //访问页面小于1
+            if (page < 1) {
+                this.$router.push('/index/1.html' + (this.tags_id ? '?tags_id=' + this.tags_id : ''));
+            }
+            this.$http.get(util.format('/article/get_lists/%s/%s' + (this.tags_id ? '?tags_id=' + this.tags_id : ''), page, length)).then(result => {
+                this.article_lists = result.data.article_lists;
+                this.totalPage = result.data.totalPage;
+                //访问页面超出最大页数
+                if (page > this.totalPage) {
+                    this.$router.push('/index/' + this.totalPage + '.html' + (this.tags_id ? '?tags_id=' + this.tags_id : ''));
+                }
+                this.$nextTick(() => {
+                    var editormd_arr = document.getElementsByClassName('editormd_container');
+                    for (var i = 0; i < editormd_arr.length; i++) {
+                        var temp = editormd_arr[i];
+                        editormd.markdownToHTML(temp['id'], {
+                            htmlDecode: "style,script,iframe",  // you can filter tags decode
+                            emoji: true,
+                            taskList: true,
+                            tex: true,  // 默认不解析
+                            flowChart: true,  // 默认不解析
+                            sequenceDiagram: true,  // 默认不解析
+                        });
+                    }
+                });
             }, err => {
 
             })
         },
-        markdown_2_html(md){
-            return marked(md)
+        unescape: function(html) {
+            return html
+                .replace(html ? /&(?!#?\w+;)/g : /&/g, '&amp;')
+                .replace(/&amp;/g, "&")
+                .replace(/&lt;/g, "<")
+                .replace(/&gt;/g, ">")
+                .replace(/&quot;/g, "\"")
+                .replace(/&#39;/g, "\'")
+                .replace(/&nbsp;/g, " ");
+        },
+        is_html(int){
+            console.log(int)
+            return !!int;
         }
     },
     filters: {
         markdown_2_html: function(md) {
-            return marked(md);
+            return md;
         }
     },
     mounted() {
-        console.log(this.article)
         this.get_lists();
     }
 }

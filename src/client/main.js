@@ -20,6 +20,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from, next) => {
     nProgress.done();
+    window.scroll(0, 0)
 })
 
 /* eslint-disable no-new */

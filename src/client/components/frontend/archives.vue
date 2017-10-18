@@ -2,7 +2,8 @@
     <section class="content">
         <div class="wrapper">
             <section class="row padder">
-                <article class="col-xs-12 padder-v">
+                <loading :show="!article_list.length"></loading>
+                <article class="col-xs-12 padder-v" v-if="article_list.length">
                     <p class="article-title h2">归档</p>
                     <div class="entry-content m-t-md">
                         <article class="list-group archives_list" v-for="(vo, key) in article_list" :key="key">
@@ -22,40 +23,28 @@
     </section>
 </template>
 <script>
+import loading from './common/loading';
 export default {
+    components: {
+        loading
+    },
     data() {
         return {
             article_list: [
-                {
-                    archives_time: '2017年10月',
-                    aaData: [
-                        {
-                            id: 1,
-                            title: '树莓派Raspberry Pi 3 安装图形化工具VNCserver',
-                            create_time: '2017年10月16日'
-                        }, {
-                            id: 2,
-                            title: '树莓派Raspberry Pi 3 安装图形化工具VNCserver',
-                            create_time: '2017年10月15日'
-                        }
-                    ]
-                },
-                {
-                    archives_time: '2017年9月',
-                    aaData: [
-                        {
-                            id: 3,
-                            title: '树莓派Raspberry Pi 3 安装图形化工具VNCserver',
-                            create_time: '2017年9月16日'
-                        }, {
-                            id: 4,
-                            title: '树莓派Raspberry Pi 3 安装图形化工具VNCserver',
-                            create_time: '2017年9月15日'
-                        }
-                    ]
-                }
             ]
         }
+    },
+    methods: {
+        get_archives() {
+            this.$http.get('/article/archives').then(result => {
+                this.article_list = result.data;
+            }, err => {
+
+            })
+        }
+    },
+    mounted() {
+        this.get_archives();
     }
 }
 </script>

@@ -70,3 +70,19 @@
 <style>
 
 </style>
+<script>
+//窗口改变,取消side展示
+$(window).resize(() => {
+    $("body").removeClass("side");
+});
+//mobile touch事件 & click 事件
+$('body').on('touchstart click', '#sidebar-mask', () => {
+    $("body").removeClass("side");
+    return false;
+});
+//toggle 展示side
+$('body').on('click', '#menuToggle,.nav_list',() => {
+    window.scrollTo(0, 0);
+    $("body").toggleClass("side");
+});
+</script>

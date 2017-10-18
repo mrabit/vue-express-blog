@@ -30,7 +30,7 @@ app.use(cookieParser());
 
 app.use('/', require('./router/router'));
 app.use('/article', require('./router/articleController'));
-app.use('/user', require('./router/users'));
+app.use('/article_tags', require('./router/articleTagsController'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
