@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import NotFoundComponent from '../components/notFound.vue';
+import admin from './admin';
 
 Vue.use(Router)
 
@@ -64,7 +65,7 @@ export default new Router({
         meta: {
             title: '标签 - 一桶浆糊的博客'
         }
-    }, {
+    }, admin, {
         path: '*',
         components: {
             default: NotFoundComponent,

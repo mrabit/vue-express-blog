@@ -21,18 +21,6 @@ $color_a: #2479CC;
     margin: 0;
 }
 
-body {
-    &.side {
-        @include side();
-        #sidebar-mask {
-            display: block;
-        }
-        .fa-align-justify:before {
-            content: "\f00d";
-        }
-    }
-}
-
 .app {
     overflow: visible !important;
     transition: all .2s;
@@ -49,8 +37,6 @@ body {
     top: 0;
     width: 250px;
     z-index: 1;
-    position: fixed;
-    top: 0;
 }
 
 .iconfont {
@@ -86,6 +72,7 @@ body {
 
 .header {
     background-color: #323436;
+    transition: all .2s;
 }
 
 #menuToggle {
@@ -131,6 +118,7 @@ body {
 .content {
     @include w-h-full;
     padding-left: 250px;
+    transition: all .2s;
 }
 
 section.content {
@@ -317,6 +305,24 @@ article {
 }
 
 @include max-screen(768px) {
+    body {
+        &.side {
+            #sidebar-mask {
+                display: block;
+            }
+            .fa-align-justify:before {
+                content: "\f00d";
+            }
+            .content,
+            .header,
+            #sidebar-mask {
+                @include side();
+            }
+            #sidebar {
+                @include side(0vw);
+            }
+        }
+    }
     #sidebar {
         @include side(-18vw);
         transition: all .2s;

@@ -57,7 +57,7 @@ app.use(function(req, res, next) {
 
     if (regexp.test(req.url)) {
         res.status(200);
-        res.render(req.app.get('env') === 'development' ? 'index_dev' : 'index');
+        res.render(process.env.NODE_ENV === 'development' ? 'index_dev' : 'index');
         return;
     }
     res.status(404);
