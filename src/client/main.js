@@ -20,7 +20,7 @@ Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
-    document.title = to.meta.title;
+    document.title = to.meta.title + ' - 一桶浆糊的博客';
     nProgress.start();
     next();
 });

@@ -4,7 +4,7 @@ export default {
     children: [{
         path: 'index.html',
         meta: {
-            title: '登录哈哈'
+            title: '首页'
         },
         components: {
             default: (resolve) => void(require(['../components/admin/index.vue'], resolve)),

@@ -19,7 +19,7 @@ export default new Router({
             footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
         },
         meta: {
-            title: '首页 - 一桶浆糊的博客'
+            title: '首页'
         }
     }, {
         path: '/index/:page.html',
@@ -30,7 +30,7 @@ export default new Router({
             footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
         },
         meta: {
-            title: '首页 - 一桶浆糊的博客'
+            title: '首页'
         }
     }, {
         path: '/details/:id.html',
@@ -41,7 +41,7 @@ export default new Router({
             footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
         },
         meta: {
-            title: '详情 - 一桶浆糊的博客'
+            title: '详情'
         }
     }, {
         path: '/archives.html',
@@ -52,7 +52,7 @@ export default new Router({
             footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
         },
         meta: {
-            title: '归档 - 一桶浆糊的博客'
+            title: '归档'
         }
     }, {
         path: '/tags.html',
@@ -63,7 +63,7 @@ export default new Router({
             footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
         },
         meta: {
-            title: '标签 - 一桶浆糊的博客'
+            title: '标签'
         }
     }, admin, {
         path: '*',
@@ -73,7 +73,7 @@ export default new Router({
             footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
         },
         meta: {
-            title: '首页 - 一桶浆糊的博客'
+            title: '首页'
         }
     }]
 })

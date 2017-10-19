@@ -32,6 +32,8 @@ app.use('/', require('./router/router'));
 app.use('/article', require('./router/articleController'));
 app.use('/article_tags', require('./router/articleTagsController'));
 
+app.use('/admin/article', require('./router/admin/articleController'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 if (process.env.NODE_ENV == 'development') {
