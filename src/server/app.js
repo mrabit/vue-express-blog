@@ -55,7 +55,7 @@ if (process.env.NODE_ENV == 'development') {
 }
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var regexp = /(^\/[^\s]*\.html|^\/$)/;
+    var regexp = /(^\/[^\s]*\.html|^\/admin|^\/$)/;
 
     if (regexp.test(req.url)) {
         res.status(200);
