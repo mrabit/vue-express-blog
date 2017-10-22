@@ -5,7 +5,7 @@
 </style>
 
 <template>
-    <div class="row padder m-t-xl" id="loading" style="min-height: 100vh" v-if="show">
+    <div class="padder m-t-xl" id="loading" style="min-height: 100vh" v-if="show">
         <div class="col-md-12 text-center">
             <i class="fa fa-spin fa-spinner fa-2x"></i>
             <div class="clear m-t-xs">

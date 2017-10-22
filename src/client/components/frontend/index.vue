@@ -20,7 +20,7 @@
         <div class="wrapper">
             <section class="row padder m-b-n-sm">
                 <div id="view" class="clearfix">
-                    <loading :show="!article_lists.length"></loading>
+                    <loading :show="!article_lists.length && !haveNotArticle"></loading>
                     <article class="col-xs-12 m-t-md" v-show="article_lists.length" v-for="(vo, key) in article_lists" :key="key">
                         <div class="row verticalCenter no-gutter">
                             <div class="col-xs-12 col-sm-8 text-left">
@@ -63,8 +63,11 @@
                         </div>
                         <div class="line line-dashed article-b-b line-lg "></div>
                     </article>
+                    <div class="text-left padder" v-if="haveNotArticle" style="min-height: 15vh">
+                        暂无数据
+                    </div>
                 </div>
-                <nav class="padder text-center" style="margin-bottom: 8px">
+                <nav class="padder text-center" style="margin-bottom: 8px" v-if="!haveNotArticle">
                     <router-link name="prev" v-if="this.currentPage > 1" :to="'/index/' + (this.currentPage - 1) + '.html' + (this.tags_id?'?tags_id=' + this.tags_id : '')" class="pull-left">« 上一页</router-link>
                     <router-link name="next" v-if="this.currentPage < this.totalPage" :to="'/index/' + (this.currentPage + 1) + '.html' + (this.tags_id?'?tags_id=' + this.tags_id : '')" class="pull-right">下一页 »</router-link>
                     <span class="w-sm text-center">
@@ -77,7 +80,7 @@
 </template>
 <script>
 import util from 'util';
-import loading from './common/loading';
+import loading from '../loading';
 export default {
     components: {
         loading
@@ -88,7 +91,8 @@ export default {
 
             ],
             length: 5,
-            totalPage: 0
+            totalPage: 0,
+            haveNotArticle: false
         }
     },
     computed: {
@@ -114,8 +118,12 @@ export default {
                 this.article_lists = result.data.article_lists;
                 this.totalPage = result.data.totalPage;
                 //访问页面超出最大页数
-                if (page > this.totalPage) {
+                if (page > this.totalPage && this.totalPage) {
                     this.$router.push('/index/' + this.totalPage + '.html' + (this.tags_id ? '?tags_id=' + this.tags_id : ''));
+                }
+                if(!this.totalPage){
+                    this.haveNotArticle = true;
+                    return false;
                 }
                 this.$nextTick(() => {
                     var editormd_arr = document.getElementsByClassName('editormd_container');

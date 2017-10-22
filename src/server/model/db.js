@@ -25,10 +25,12 @@ Connection.prototype.query = function query(sql, values, cb, isConsole) {
 
 
 var connection = mysql.createConnection({
-    host: '120.24.72.90',
+    // host: '120.24.72.90',
+    host: '192.168.0.200',
     user: 'biabia123456',
     password: '519296987',
-    database: 'blogs'
+    database: 'blogs',
+    useConnectionPooling: true
 });
 
 connection.connect();

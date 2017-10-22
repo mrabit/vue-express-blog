@@ -73,7 +73,7 @@ Article.get_article_lists = function(params) {
         mysql.query(sql, [params.start, params.length], function(err, result) {
             if (err) reject(err.message)
             resolve(result);
-        }, true);
+        });
     })
 }
 
@@ -112,7 +112,7 @@ Article.get_article_count_by_tagsId = function(tags_id) {
         mysql.query(sql, tags_id, function(err, result) {
             if (err) reject(err.message);
             resolve(result[0]['count'])
-        }, true)
+        })
     })
 }
 
@@ -138,13 +138,13 @@ Article.get_article_by_archives = function() {
  * @return mixed
  */
 Article.get_article_by_in = function(params) {
-    var sql = "select id,title,create_time from tp_article where " + params.key + " in (" + params.val + ")\
+    var sql = "select id,title,FROM_UNIXTIME( create_time,' %Y-%m-%d' ) as create_time from tp_article where " + params.key + " in (" + params.val + ")\
      and private <> 1 order by create_time desc";
     return new Promise((resolve, reject) => {
         mysql.query(sql, (err, result) => {
             if (err) reject(err.message);
             resolve(result);
-        }, true)
+        })
     })
 }
 

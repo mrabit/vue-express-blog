@@ -1013,7 +1013,7 @@
                     toolbar.css({
                         position: "fixed",
                         width: editor.width() + "px",
-                        left: (($window.width() + 396 - editor.width()) / 2) + "px"
+                        left: (($window.width() + 422 - editor.width()) / 2) + "px"
                     });
                 } else {
                     toolbar.css({

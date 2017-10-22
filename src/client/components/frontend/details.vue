@@ -89,7 +89,7 @@
     </section>
 </template>
 <script>
-import loading from './common/loading';
+import loading from '../loading';
 export default {
     components: {
         loading

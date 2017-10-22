@@ -33,6 +33,7 @@ app.use('/article', require('./router/articleController'));
 app.use('/article_tags', require('./router/articleTagsController'));
 
 app.use('/admin/article', require('./router/admin/articleController'));
+app.use('/admin/tags', require('./router/admin/tagsController'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -55,7 +56,7 @@ if (process.env.NODE_ENV == 'development') {
 }
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var regexp = /(^\/[^\s]*\.html|^\/admin|^\/$)/;
+    var regexp = /(^\/[^\s]*\.html|^\/admin[\s|\/]$|^\/$)/;
 
     if (regexp.test(req.url)) {
         res.status(200);

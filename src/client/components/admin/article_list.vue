@@ -5,65 +5,79 @@
 </style>
 <template>
     <section class="app-content">
-        <div class="bg-light lter b-b wrapper-md">
-            <h1 class="m-n font-thin h3">文章列表</h1>
+      <div class="app-content-body">
+        <loading :show="loading"></loading>
+        <div v-show="!loading">
+          <div class="bg-light lter b-b wrapper-md">
+              <h1 class="m-n font-thin h3">文章列表</h1>
+          </div>
+          <div class="wrapper clearfix m-b-md">
+              <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                  <el-form-item label="文章标题：">
+                      <el-input v-model="formInline.title" placeholder="文章标题,支持模糊搜索"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                      <el-checkbox label=" 发布时间：" name="type" v-model="formInline.need_time"></el-checkbox>
+                      <el-date-picker format="yyyy-MM-dd hh:mm:ss" v-model="formInline.release_time" :disabled="!formInline.need_time" type="daterange" align="right" placeholder="选择日期范围" :picker-options="pickerOptions">
+                      </el-date-picker>
+                  </el-form-item>
+                  <el-form-item>
+                      <el-button type="primary" @click="onSubmit">查询</el-button>
+                  </el-form-item>
+              </el-form>
+              <el-table :data="tableData" stripe class="w-full">
+                  <el-table-column prop="id" label="ID" width="80">
+                  </el-table-column>
+                  <el-table-column prop="title" label="标题">
+                  </el-table-column>
+                  <el-table-column prop="private" label="公开度" width="100">
+                      <template slot-scope="scope">
+                          <span>{{ scope.row.private | isPrivate }}</span>
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="reprint_url" label="是否转载" width="100">
+                      <template slot-scope="scope">
+                          <span>{{ scope.row.reprint_url | isReprint }}</span>
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="uname" label="发布者" width="100">
+                  </el-table-column>
+                  <el-table-column prop="release_time" label="发布时间" width="180">
+                  </el-table-column>
+                  <el-table-column label="操作" width="220">
+                      <template slot-scope="scope">
+                          <router-link class="btn btn-default btn-sm w-xs" :disabled="!!parseInt(scope.row.is_html)"
+                              :to="'/admin/article_edit.html?id=' + scope.row.id">编辑</router-link>
+                          <el-popover placement="top" trigger="click" v-model="scope.row.visable">
+                              <p>删除操作将无法撤回,是否继续？</p>
+                              <div style="text-align: right; margin: 0">
+                                <el-button size="mini" type="text" @click="scope.row.visable = false">取消</el-button>
+                                <el-button type="primary" size="mini" @click="handleDelete(scope.row)">确定</el-button>
+                              </div>
+                              <button class="btn btn-default btn-sm w-xs" type="button" 
+                                slot="reference">删除</button>
+                          </el-popover>
+                      </template>
+                  </el-table-column>
+              </el-table>
+              <div class="pull-right m-t-md">
+                  <el-pagination
+                      @current-change="handleCurrentChange"
+                      :page-size="pageSize"
+                      layout="total, prev, pager, next"
+                      :total="total">
+                  </el-pagination>
+              </div>
+          </div>
         </div>
-        <div class="wrapper clearfix m-b-md">
-            <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                <el-form-item label="文章标题：">
-                    <el-input v-model="formInline.title" placeholder="文章标题,支持模糊搜索"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-checkbox label=" 发布时间：" name="type" v-model="formInline.need_time"></el-checkbox>
-                    <el-date-picker format="yyyy-MM-dd hh:mm:ss" v-model="formInline.release_time" :disabled="!formInline.need_time" type="daterange" align="right" placeholder="选择日期范围" :picker-options="pickerOptions">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onSubmit">查询</el-button>
-                </el-form-item>
-            </el-form>
-            <el-table :data="tableData" stripe class="w-full">
-                <el-table-column prop="id" label="ID" width="80">
-                </el-table-column>
-                <el-table-column prop="title" label="标题">
-                </el-table-column>
-                <el-table-column prop="private" label="公开度" width="100">
-                    <template scope="scope">
-                        <span>{{ scope.row.private | isPrivate }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="reprint_url" label="是否转载" width="100">
-                    <template scope="scope">
-                        <span>{{ scope.row.reprint_url | isReprint }}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="uname" label="发布者" width="100">
-                </el-table-column>
-                <el-table-column prop="release_time" label="发布时间" width="180">
-                </el-table-column>
-                <el-table-column label="操作" width="220">
-                    <template scope="scope">
-                        <button type="button" class="btn btn-default btn-sm w-xs" :disabled="!!parseInt(scope.row.is_html)"
-                            @click="handleEdit(scope.$index, scope.row)">编辑</button>
-                        <button type="button" class="btn btn-default btn-sm w-xs" 
-                            @click="handleDelete(scope.$index, scope.row)">删除</button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="pull-right m-t-md">
-                <el-pagination
-                    @current-change="handleCurrentChange"
-                    :page-size="pageSize"
-                    layout="total, prev, pager, next"
-                    :total="total">
-                </el-pagination>
-            </div>
-        </div>
+      </div>
     </section>
 </template>
 <script>
-var util = require("util");
+import util from "util";
+import loading from "../loading";
 export default {
+  components: { loading },
   data() {
     return {
       formInline: {
@@ -108,7 +122,8 @@ export default {
       },
       tableData: [],
       total: 0,
-      pageSize: 10
+      pageSize: 10,
+      loading: true
     };
   },
   filters: {
@@ -131,8 +146,12 @@ export default {
       }
       this.$http.get(url).then(d => {
         var result = d.data;
+        for (var i in result.article_lists) {
+          result.article_lists[i]["visable"] = false;
+        }
         this.tableData = result.article_lists;
         this.total = result.count;
+        this.loading = false;
       });
     },
     onSubmit() {
@@ -158,11 +177,18 @@ export default {
 
       this.handleCurrentChange(1);
     },
-    handleEdit(index, row) {
-      console.log(index, row);
-    },
-    handleDelete(index, row) {
-      console.log(index, row);
+    handleDelete(row) {
+      row.visable = false;
+      this.$http.post("/admin/article/delete_article",{id: row.id}).then(result => {
+        if (result.data.code == "200") {
+          this.handleCurrentChange();
+          this.$notify({
+            title: "成功",
+            message: "文章删除成功!",
+            type: "success"
+          });
+        }
+      });
     }
   },
   mounted() {

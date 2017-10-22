@@ -21,7 +21,6 @@ router.get('/get_lists/:page/:length', function(req, res) {
     };
     (!params.tags_id ? Article.get_article_lists(params) : Article.get_article_lists_by_tagsId(params))
     .then(aaData => {
-        // res.json(result);
         return (!params.tags_id ? Article.get_article_count() : Article.get_article_count_by_tagsId(params.tags_id || null))
             .then(count => {
                 //取文章总页数
@@ -39,19 +38,6 @@ router.get('/get_lists/:page/:length', function(req, res) {
 
 router.get('/archives', function(req, res) {
     Article.get_article_by_archives().then(result => {
-        // var article_lists = [];
-        // result.forEach(function(v, k) {
-        //     var temp = {
-        //         archives_time: v.create_time
-        //     };
-        //     Article.get_article_by_in({
-        //         key: 'id',
-        //         val: v.id
-        //     }).then(lists => {
-        //        temp['aaData'] = lists;
-        //        article_lists.push(temp);
-        //     })
-        // }, this);
         var article_lists = [];
         result.reduce((p, next) => {
             return p.then(() => {

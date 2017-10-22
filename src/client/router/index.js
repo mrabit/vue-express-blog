@@ -23,7 +23,7 @@ export default new Router({
         }
     }, {
         path: '/index/:page.html',
-        name: 'index',
+        name: 'page',
         components: {
             default: (resolve) => void(require(['../components/frontend/index.vue'], resolve)),
             side: (resolve) => void(require(['../components/frontend/common/side.vue'], resolve)),

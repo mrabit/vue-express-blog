@@ -61,6 +61,7 @@
                 <el-menu-item-group>
                     <el-menu-item index="/admin/article_list.html">文章列表</el-menu-item>
                     <el-menu-item index="/admin/article_add.html">发布文章</el-menu-item>
+                    <el-menu-item index="/admin/article_edit.html">修改文章</el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
             <el-submenu index="3" class="bg-dark">
