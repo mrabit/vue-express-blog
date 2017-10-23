@@ -1,10 +1,11 @@
 var mysql = require('mysql');
 var Connection = require('mysql/lib/Connection');
+var db_config = require('../config').db;
 
 Connection.prototype.query = function query(sql, values, cb, isConsole) {
     var query = Connection.createQuery(sql, values, cb);
     query._connection = this;
-    
+
     if (typeof cb !== "function") {
         isConsole = cb;
     }
@@ -23,15 +24,7 @@ Connection.prototype.query = function query(sql, values, cb, isConsole) {
     return this._protocol._enqueue(query);
 };
 
-
-var connection = mysql.createConnection({
-    // host: '120.24.72.90',
-    host: '192.168.0.200',
-    user: 'biabia123456',
-    password: '519296987',
-    database: 'blogs',
-    useConnectionPooling: true
-});
+var connection = mysql.createConnection(db_config);
 
 connection.connect();
 

@@ -35,6 +35,9 @@ app.use('/article_tags', require('./router/articleTagsController'));
 app.use('/admin/article', require('./router/admin/articleController'));
 app.use('/admin/tags', require('./router/admin/tagsController'));
 
+
+app.use('/qiniu', require('./router/qiniuController'));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 if (process.env.NODE_ENV == 'development') {

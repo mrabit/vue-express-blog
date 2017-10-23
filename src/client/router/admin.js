@@ -43,7 +43,17 @@ export default {
             side: (resolve) => void(require(['../components/admin/common/side.vue'], resolve)),
             header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
         }
-    },{
+    }, {
+        path: 'article_tags.html',
+        meta: {
+            title: '标签管理'
+        },
+        components: {
+            default: (resolve) => void(require(['../components/admin/article_tags.vue'], resolve)),
+            side: (resolve) => void(require(['../components/admin/common/side.vue'], resolve)),
+            header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
+        }
+    }, {
         path: '/admin/*',
         components: {
             default: NotFoundComponent,
