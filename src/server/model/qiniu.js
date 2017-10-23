@@ -7,7 +7,6 @@ var url = require('url');
 
 var qiniu_model = function () {
     //需要填写你的 Access Key 和 Secret Key
-    console.log(qiniu_config);
     this.mac = new qiniu.auth.digest.Mac(qiniu_config.accessKey, qiniu_config.secretKey);
     //要上传的空间
     this.bucket = qiniu_config.bucket;
