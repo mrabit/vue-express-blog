@@ -1,5 +1,5 @@
 <template>
-    <section class="content">
+    <section :class="{'content': !className, 'app-content': className}">
         <div class="wrapper">
             <section class="row padder">
                 <article class="padder">
@@ -13,3 +13,13 @@
         </div>
     </section>
 </template>
+<script>
+    export default {
+        computed: {
+            className(){
+                var reg = /\/admin\/*/;
+                return reg.test(this.$route.path);
+            }
+        }
+    }
+</script>

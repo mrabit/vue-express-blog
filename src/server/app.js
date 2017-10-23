@@ -56,15 +56,17 @@ if (process.env.NODE_ENV == 'development') {
 }
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var regexp = /(^\/[^\s]*\.html|^\/admin[\s|\/]$|^\/$)/;
+    // var regexp = /(^\/[^\s]*\.html|^\/admin[\s|\/]$|^\/$)/;
 
-    if (regexp.test(req.url)) {
-        res.status(200);
-        res.render(process.env.NODE_ENV === 'development' ? 'index_dev' : 'index');
-        return;
-    }
-    res.status(404);
-    res.render('404');
+    // if (regexp.test(req.url)) {
+    //     res.status(200);
+    //     res.render(process.env.NODE_ENV === 'development' ? 'index_dev' : 'index');
+    //     return;
+    // }
+    // res.status(404);
+    // res.render('404');
+    res.status(200);
+    res.render(process.env.NODE_ENV === 'development' ? 'index_dev' : 'index');
 });
 
 // error handler
