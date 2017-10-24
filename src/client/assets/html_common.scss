@@ -15,6 +15,10 @@ $color_a: #2479CC;
     transform: translate3D($width, 0, 0);
 }
 
+.invisible {
+    visibility: hidden;
+}
+
 .verticalCenter {
     @include verticalCenter;
     min-height: 60px;

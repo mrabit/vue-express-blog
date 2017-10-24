@@ -24,6 +24,21 @@ var get_bing_json = (params) => {
     })
 }
 
+router.get('/', function (req, res) {
+    Bing.get_image_by_time(moment().format('YYYY-MM-DD')).then(result => {
+        if (result.length <= 0) {
+            res.json({
+                code: 404,
+                message: '暂无今日图片'
+            })
+            return false;
+        }
+        res.redirect(result[0].img_url);
+    }, err => {
+        res.end(err);
+    })
+})
+
 /***
  * 新增bing图片
  * @param string d (ps:-1:明天,0:今天,1:昨天,2:前天...........)
@@ -118,5 +133,34 @@ router.get('/add_info', (req, res) => {
         return false;
     });
 })
+
+/***
+ * 获取bing图片列表
+ * @param int page   当前页
+ * @param int length 每页条数
+ * @return mixed
+ */
+router.get('/get_img_lists/:page/:length', function (req, res) {
+    var params = {
+        page: parseInt(req.params.page) || 1,
+        length: parseInt(req.params.length) || 5
+    };
+
+    Bing.get_img_lists(params).then(img_list => {
+        return Bing.get_img_count().then(count => {
+            //取文章总页数
+            var totalPage = Math.ceil(count / params.length);
+            return {
+                totalPage: totalPage,
+                img_list: img_list
+            }
+        })
+    }, err => {
+        res.end(err);
+    }).then(result => {
+        res.json(result);
+    })
+})
+
 
 module.exports = router;

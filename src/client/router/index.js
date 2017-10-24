@@ -65,6 +65,28 @@ export default new Router({
         meta: {
             title: '标签'
         }
+    }, {
+        path: '/bing.html',
+        name: 'bing',
+        components: {
+            default: (resolve) => void(require(['../components/frontend/bing.vue'], resolve)),
+            side: (resolve) => void(require(['../components/frontend/common/side.vue'], resolve)),
+            footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
+        },
+        meta: {
+            title: 'bing每日一图'
+        }
+    }, {
+        path: '/bing/:page.html',
+        name: 'bing_page',
+        components: {
+            default: (resolve) => void(require(['../components/frontend/bing.vue'], resolve)),
+            side: (resolve) => void(require(['../components/frontend/common/side.vue'], resolve)),
+            footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
+        },
+        meta: {
+            title: 'bing每日一图'
+        }
     }, admin, {
         path: '*',
         components: {

@@ -1,8 +1,4 @@
 <style scoped>
-.invisible {
-    visibility: hidden
-}
-
 .paging {
     border-bottom: 1px solid #ccc;
     padding-bottom: 15px;

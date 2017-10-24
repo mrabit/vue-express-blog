@@ -1,18 +1,10 @@
 <style scoped>
-.invisible {
-    visibility: hidden
-}
-
-#view>article.col-xs-12:nth-child(1) {
-    margin-top: 0!important;
+#view > article.col-xs-12:nth-child(1) {
+  margin-top: 0 !important;
 }
 
 .no-gutter.verticalCenter {
-    min-height: inherit;
-}
-
-[v-cloak] {
-    display: none;
+  min-height: inherit;
 }
 </style>
 <template>
@@ -68,8 +60,8 @@
                     </div>
                 </div>
                 <nav class="padder text-center" style="margin-bottom: 8px" v-if="!haveNotArticle">
-                    <router-link name="prev" v-if="this.currentPage > 1" :to="'/index/' + (this.currentPage - 1) + '.html' + (this.tags_id?'?tags_id=' + this.tags_id : '')" class="pull-left">« 上一页</router-link>
-                    <router-link name="next" v-if="this.currentPage < this.totalPage" :to="'/index/' + (this.currentPage + 1) + '.html' + (this.tags_id?'?tags_id=' + this.tags_id : '')" class="pull-right">下一页 »</router-link>
+                    <router-link name="prev" :class="{ invisible: this.currentPage <= 1 }" :to="'/index/' + (this.currentPage - 1) + '.html' + (this.tags_id?'?tags_id=' + this.tags_id : '')" class="pull-left">« 上一页</router-link>
+                    <router-link name="next" :class="{ invisible: this.currentPage >= this.totalPage }" :to="'/index/' + (this.currentPage + 1) + '.html' + (this.tags_id?'?tags_id=' + this.tags_id : '')" class="pull-right">下一页 »</router-link>
                     <span class="w-sm text-center">
                         <router-link to="/archives.html">博客归档</router-link>
                     </span>
@@ -79,93 +71,110 @@
     </section>
 </template>
 <script>
-import util from 'util';
-import loading from '../loading';
+import util from "util";
+import loading from "../loading";
 export default {
-    components: {
-        loading
+  components: {
+    loading
+  },
+  data() {
+    return {
+      article_lists: [],
+      pageSize: 5,
+      totalPage: 0,
+      haveNotArticle: false
+    };
+  },
+  computed: {
+    currentPage() {
+      return parseInt(this.$route.params.page || 1);
     },
-    data() {
-        return {
-            article_lists: [
-
-            ],
-            length: 5,
-            totalPage: 0,
-            haveNotArticle: false
-        }
-    },
-    computed: {
-        currentPage() {
-            return parseInt(this.$route.params.page || 1);
-        },
-        tags_id() {
-            return this.$route.query.tags_id;
-        }
-    },
-    watch: {
-        "$route": "get_lists"
-    },
-    methods: {
-        get_lists() {
-            var page = this.currentPage;
-            var length = 5;
-            //访问页面小于1
-            if (page < 1) {
-                this.$router.push('/index/1.html' + (this.tags_id ? '?tags_id=' + this.tags_id : ''));
-            }
-            this.$http.get(util.format('/article/get_lists/%s/%s' + (this.tags_id ? '?tags_id=' + this.tags_id : ''), page, length)).then(result => {
-                this.article_lists = result.data.article_lists;
-                this.totalPage = result.data.totalPage;
-                //访问页面超出最大页数
-                if (page > this.totalPage && this.totalPage) {
-                    this.$router.push('/index/' + this.totalPage + '.html' + (this.tags_id ? '?tags_id=' + this.tags_id : ''));
-                }
-                if(!this.totalPage){
-                    this.haveNotArticle = true;
-                    return false;
-                }
-                this.$nextTick(() => {
-                    var editormd_arr = document.getElementsByClassName('editormd_container');
-                    for (var i = 0; i < editormd_arr.length; i++) {
-                        var temp = editormd_arr[i];
-                        editormd.markdownToHTML(temp['id'], {
-                            htmlDecode: "style,script,iframe",  // you can filter tags decode
-                            emoji: true,
-                            taskList: true,
-                            tex: true,  // 默认不解析
-                            flowChart: true,  // 默认不解析
-                            sequenceDiagram: true,  // 默认不解析
-                        });
-                    }
-                });
-            }, err => {
-
-            })
-        },
-        unescape: function(html) {
-            return html
-                .replace(html ? /&(?!#?\w+;)/g : /&/g, '&amp;')
-                .replace(/&amp;/g, "&")
-                .replace(/&lt;/g, "<")
-                .replace(/&gt;/g, ">")
-                .replace(/&quot;/g, "\"")
-                .replace(/&#39;/g, "\'")
-                .replace(/&nbsp;/g, " ");
-        },
-        is_html(int){
-            console.log(int)
-            return !!int;
-        }
-    },
-    filters: {
-        markdown_2_html: function(md) {
-            return md;
-        }
-    },
-    mounted() {
-        this.get_lists();
+    tags_id() {
+      return this.$route.query.tags_id;
     }
-}
+  },
+  watch: {
+    $route: "get_lists"
+  },
+  methods: {
+    get_lists() {
+      var currentPage = this.currentPage;
+      var pageSize = this.pageSize;
+      //访问页面小于1
+      if (currentPage < 1) {
+        this.$router.push(
+          "/index/1.html" + (this.tags_id ? "?tags_id=" + this.tags_id : "")
+        );
+      }
+      this.$http
+        .get(
+          util.format(
+            "/article/get_lists/%s/%s" +
+              (this.tags_id ? "?tags_id=" + this.tags_id : ""),
+            currentPage,
+            pageSize
+          )
+        )
+        .then(
+          result => {
+            this.article_lists = result.data.article_lists;
+            this.totalPage = result.data.totalPage;
+            //访问页面超出最大页数
+            if (currentPage > this.totalPage && this.totalPage) {
+              this.$router.push(
+                "/index/" +
+                  this.totalPage +
+                  ".html" +
+                  (this.tags_id ? "?tags_id=" + this.tags_id : "")
+              );
+            }
+            if (!this.totalPage) {
+              this.haveNotArticle = true;
+              return false;
+            }
+            this.$nextTick(() => {
+              var editormd_arr = document.getElementsByClassName(
+                "editormd_container"
+              );
+              for (var i = 0; i < editormd_arr.length; i++) {
+                var temp = editormd_arr[i];
+                editormd.markdownToHTML(temp["id"], {
+                  htmlDecode: "style,script,iframe", // you can filter tags decode
+                  emoji: true,
+                  taskList: true,
+                  tex: true, // 默认不解析
+                  flowChart: true, // 默认不解析
+                  sequenceDiagram: true // 默认不解析
+                });
+              }
+            });
+          },
+          err => {}
+        );
+    },
+    unescape: function(html) {
+      return html
+        .replace(html ? /&(?!#?\w+;)/g : /&/g, "&amp;")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&nbsp;/g, " ");
+    },
+    is_html(int) {
+      console.log(int);
+      return !!int;
+    }
+  },
+  filters: {
+    markdown_2_html: function(md) {
+      return md;
+    }
+  },
+  mounted() {
+    this.get_lists();
+  }
+};
 </script>
 
