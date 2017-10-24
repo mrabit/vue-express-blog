@@ -11,6 +11,6 @@ module.exports = {
         accessKey: "A3lOKkCWVLWlCqw5m3uAh5CV4LbyPh539OgHiIXe",
         secretKey: "JNPtAMXh5mo3EMakgm8tOOumjZhk7k7HRHMS_RLI",
         bucket: "jtycw",
-        domain: "http://ogh85h6uo.bkt.clouddn.com"
+        domain: "http://cdn.mrabit.com/"
     }
 }

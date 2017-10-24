@@ -31,12 +31,13 @@ app.use(cookieParser());
 app.use('/', require('./router/router'));
 app.use('/article', require('./router/articleController'));
 app.use('/article_tags', require('./router/articleTagsController'));
+app.use('/bing', require('./router/bingController'));
 
 app.use('/admin/article', require('./router/admin/articleController'));
 app.use('/admin/tags', require('./router/admin/tagsController'));
 
 
-app.use('/qiniu', require('./router/qiniuController'));
+app.use('/upload', require('./router/uploadController'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
