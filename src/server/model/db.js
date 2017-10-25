@@ -24,8 +24,22 @@ Connection.prototype.query = function query(sql, values, cb, isConsole) {
     return this._protocol._enqueue(query);
 };
 
-var connection = mysql.createConnection(db_config);
+var pool = mysql.createPool(db_config);
 
-connection.connect();
+var query = function(sql, params, callback) {
+    typeof params == "function" && (callback = params, params = null);
+    pool.getConnection(function(err, conn) {
+        if (err) {
+            callback(err, null, null);
+        } else {
+            conn.query(sql, params, function(qerr, vals, fields) {
+                //释放连接
+                conn.release();
+                //事件驱动回调
+                callback(qerr, vals, fields);
+            });
+        }
+    });
+};
 
-module.exports = connection;
+module.exports = query;

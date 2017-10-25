@@ -1,26 +1,26 @@
-var mysql = require('./db');
+var query = require('./db');
 
-var Bing = function () {
+var Bing = function() {
 
 }
 
 module.exports = Bing;
 
-Bing.add_img = function (params) {
+Bing.add_img = function(params) {
 
 }
 
-Bing.get_image_by_time = function (time) {
-    var sql = "select * from tp_bing where img_time = ?";
+Bing.get_image_by_time = function(time) {
+    var sql = "select * from tp_bing where img_time = '2017-10-25'";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, time, function (err, result) {
+        query(sql, time, function(err, result) {
             if (err) reject(err.message);
             resolve(result);
         });
     })
 }
 
-Bing.insert_imgInfo = function (params) {
+Bing.insert_imgInfo = function(params) {
     var map = [
         params.img_real_url,
         params.img_url_480,
@@ -31,28 +31,28 @@ Bing.insert_imgInfo = function (params) {
     var sql = "INSERT INTO `tp_bing` (`img_real_url`,`img_url_480`,`img_url`,`img_time`,`img_title`)\
     VALUES (?,?,?,?,?)";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, map, (err, result) => {
+        query(sql, map, (err, result) => {
             if (err) reject(err.message);
             resolve(result);
         })
     })
 }
 
-Bing.get_img_lists = function (params) {
+Bing.get_img_lists = function(params) {
     params['start'] = (params.page - 1) * params.length;
     var sql = "SELECT id, img_url, img_time, img_title from tp_bing ORDER BY img_time desc LIMIT ?,?";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, [params.start, params.length], function (err, result) {
+        query(sql, [params.start, params.length], function(err, result) {
             if (err) reject(err.message)
             resolve(result);
         });
     })
 }
 
-Bing.get_img_count = function () {
+Bing.get_img_count = function() {
     var sql = "select count(*) as count from tp_bing";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, function (err, result) {
+        query(sql, function(err, result) {
             if (err) reject(err.message);
             resolve(result[0]['count']);
         })

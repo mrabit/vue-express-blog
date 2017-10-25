@@ -1,4 +1,4 @@
-var mysql = require('./db');
+var query = require('./db');
 var util = require('util');
 
 var ArticleTags = function() {
@@ -11,7 +11,7 @@ ArticleTags.get_tags = function() {
      tp_tags as b on tags_id = b.id left join tp_article as a on article_id = a.id and a.private\
       <> '1'  GROUP BY tags_name ORDER BY counts desc";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, (err, result) => {
+        query(sql, (err, result) => {
             if (err) reject(err.message);
             resolve(result);
         })

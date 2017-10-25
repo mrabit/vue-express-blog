@@ -1,4 +1,4 @@
-var mysql = require('./db');
+var query = require('./db');
 var util = require('util');
 
 var Article = function(params) {
@@ -19,7 +19,7 @@ Article.get_article_by_id = function(id) {
         sql += " where ta.id = ?";
     }
     return new Promise((resolve, reject) => {
-        mysql.query(sql, id, function(err, result) {
+        query(sql, id, function(err, result) {
             if (err) reject(err.message);
             resolve({
                 article: result,
@@ -38,7 +38,7 @@ Article.get_article_adjoin_by_id = function(params) {
     var sql = "SELECT * FROM ( SELECT `id`,`title` FROM `tp_article` WHERE `id` < ? AND `private` <> 1 ORDER BY id desc LIMIT 1   )\
      t1 UNION ALL SELECT * FROM ( SELECT `id`,`title` FROM `tp_article` WHERE `id` > ? AND `private` <> 1 ORDER BY id LIMIT 1   ) t2";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, [params.id, params.id], function(err, result) {
+        query(sql, [params.id, params.id], function(err, result) {
             if (err) reject(err.message);
             //只有一条数据
             if (result.length == 1) {
@@ -70,7 +70,7 @@ Article.get_article_lists = function(params) {
        a left join tp_user as u on create_user_id = u.id  WHERE `private` <> '1' ORDER BY create_time\
         desc LIMIT ?,?";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, [params.start, params.length], function(err, result) {
+        query(sql, [params.start, params.length], function(err, result) {
             if (err) reject(err.message)
             resolve(result);
         });
@@ -84,7 +84,7 @@ Article.get_article_lists = function(params) {
 Article.get_article_count = function() {
     var sql = 'SELECT count(*) as count from tp_article where private != 1';
     return new Promise((resolve, reject) => {
-        mysql.query(sql, (err, result) => {
+        query(sql, (err, result) => {
             if (err) reject(err.message);
             resolve(result[0]['count']);
         })
@@ -98,7 +98,7 @@ Article.get_article_lists_by_tagsId = function(params) {
       as u on create_user_id = u.id inner join tp_article_tags as t on t.article_id = a.id  WHERE `tags_id` = ? AND \
        `private` <> '1' ORDER BY create_time desc LIMIT ?,?  ";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, [params.tags_id, params.start, params.length], function(err, result) {
+        query(sql, [params.tags_id, params.start, params.length], function(err, result) {
             if (err) reject(err.message);
             resolve(result)
         })
@@ -109,7 +109,7 @@ Article.get_article_count_by_tagsId = function(tags_id) {
     var sql = "SELECT COUNT(*) AS count FROM `tp_article`  as a left join tp_user as u on create_user_id = u.id\
      inner join tp_article_tags as t on t.article_id = a.id  WHERE `tags_id` = ? AND `private` <> '1' LIMIT 1 ";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, tags_id, function(err, result) {
+        query(sql, tags_id, function(err, result) {
             if (err) reject(err.message);
             resolve(result[0]['count'])
         })
@@ -125,7 +125,7 @@ Article.get_article_by_archives = function() {
         ,GROUP_CONCAT(id) as id FROM `tp_article` GROUP BY FROM_UNIXTIME( create_time, "%Y年%m月" )\
          ORDER BY create_time DESC';
     return new Promise((resolve, reject) => {
-        mysql.query(sql, (err, result) => {
+        query(sql, (err, result) => {
             if (err) reject(err.message);
             resolve(result);
         })
@@ -141,7 +141,7 @@ Article.get_article_by_in = function(params) {
     var sql = "select id,title,FROM_UNIXTIME( create_time,' %Y-%m-%d' ) as create_time from tp_article where " + params.key + " in (" + params.val + ")\
      and private <> 1 order by create_time desc";
     return new Promise((resolve, reject) => {
-        mysql.query(sql, (err, result) => {
+        query(sql, (err, result) => {
             if (err) reject(err.message);
             resolve(result);
         })

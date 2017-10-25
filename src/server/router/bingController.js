@@ -24,7 +24,7 @@ var get_bing_json = (params) => {
     })
 }
 
-router.get('/', function (req, res) {
+router.get('/', function(req, res) {
     Bing.get_image_by_time(moment().format('YYYY-MM-DD')).then(result => {
         if (result.length <= 0) {
             res.json({
@@ -140,7 +140,7 @@ router.get('/add_info', (req, res) => {
  * @param int length 每页条数
  * @return mixed
  */
-router.get('/get_img_lists/:page/:length', function (req, res) {
+router.get('/get_img_lists/:page/:length', function(req, res) {
     var params = {
         page: parseInt(req.params.page) || 1,
         length: parseInt(req.params.length) || 5
@@ -151,6 +151,7 @@ router.get('/get_img_lists/:page/:length', function (req, res) {
             //取文章总页数
             var totalPage = Math.ceil(count / params.length);
             return {
+                count: count,
                 totalPage: totalPage,
                 img_list: img_list
             }

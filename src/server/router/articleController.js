@@ -26,6 +26,7 @@ router.get('/get_lists/:page/:length', function(req, res) {
                 //取文章总页数
                 var totalPage = Math.ceil(count / params.length);
                 return {
+                    count: count,
                     totalPage: totalPage,
                     article_lists: aaData
                 }

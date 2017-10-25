@@ -1,23 +1,23 @@
-var mysql = require('../db');
+var query = require('../db');
 
-var Article = function () {
+var Article = function() {
 
 }
 
-Article.get_article_by_id = function (id) {
+Article.get_article_by_id = function(id) {
     var sql = 'SELECT id,title,reprint_url,private,content from tp_article';
     if (id) {
         sql += " where id = ?";
     }
     return new Promise((resolve, reject) => {
-        mysql.query(sql, id, function (err, result) {
+        query(sql, id, function(err, result) {
             if (err) reject(err.message);
             resolve(result[0]);
         })
     });
 }
 
-Article.get_article_lists = function (params) {
+Article.get_article_lists = function(params) {
     params['start'] = (params.page - 1) * params.length;
     var sql = "SELECT a.id,`title`,`is_html`,`reprint_url`,`private`,u.uname,\
     FROM_UNIXTIME( create_time,'%Y-%m-%d %H:%i:%S' ) as release_time FROM `tp_article` as a \
@@ -40,14 +40,14 @@ Article.get_article_lists = function (params) {
     sql += (map_str + " ORDER BY create_time desc LIMIT ?,?");
 
     return new Promise((resolve, reject) => {
-        mysql.query(sql, [params.start, params.length], function (err, result) {
+        query(sql, [params.start, params.length], function(err, result) {
             if (err) reject(err.message);
             resolve(result);
         })
     })
 }
 
-Article.get_article_count = function (params) {
+Article.get_article_count = function(params) {
     var sql = 'SELECT count(*) as count from tp_article';
     var map = [];
     if (params.title) {
@@ -65,14 +65,14 @@ Article.get_article_count = function (params) {
     }
     sql += (map_str.substring(0, map_str.length - (" AND ").length));
     return new Promise((resolve, reject) => {
-        mysql.query(sql, (err, result) => {
+        query(sql, (err, result) => {
             if (err) reject(err.message);
             resolve(result[0]['count']);
         }, false)
     })
 }
 
-Article.insert_article = function (article) {
+Article.insert_article = function(article) {
     var sql = "INSERT INTO `tp_article` (`title`,`content`,`reprint_url`,`private`,`create_user_id`,`create_time`)\
      VALUES (?,?,?,?,?,?)";
     return new Promise((resolve, reject) => {
@@ -84,24 +84,24 @@ Article.insert_article = function (article) {
             article.create_user_id,
             Date.parse(new Date()) / 1000
         ]
-        mysql.query(sql, map, function (err, insert_id) {
+        query(sql, map, function(err, insert_id) {
             if (err) reject(err.message);
             resolve(insert_id.insertId);
         });
     })
 }
 
-Article.delete_article_by_id = function (id) {
+Article.delete_article_by_id = function(id) {
     var sql = "delete from tp_article where id = " + id;
     return new Promise((resolve, reject) => {
-        mysql.query(sql, (err, result) => {
+        query(sql, (err, result) => {
             if (err) reject(err.message);
             resolve(result);
         })
     })
 }
 
-Article.update_article_by_id = function (params) {
+Article.update_article_by_id = function(params) {
     var sql = "update tp_article set title=?,content=?,private=?,reprint_url=?,modify_time=? where id=?";
     var map = [
         params.title,
@@ -112,7 +112,7 @@ Article.update_article_by_id = function (params) {
         params.id
     ]
     return new Promise((resolve, reject) => {
-        mysql.query(sql, map, function (err, result) {
+        query(sql, map, function(err, result) {
             if (err) reject(err.message);
             console.log(result);
             resolve(result);

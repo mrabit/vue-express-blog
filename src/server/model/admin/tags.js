@@ -1,25 +1,25 @@
-var mysql = require('../db');
+var query = require('../db');
 
-var Tags = function () {
+var Tags = function() {
 
 }
 
 module.exports = Tags;
 
-Tags.get_all_tags = function (params) {
+Tags.get_all_tags = function(params) {
     var sql = "SELECT * FROM `tp_tags`";
-    if(params){
-        sql+=("where `tags_name` in ('" + params.join("','") + "')"); 
+    if (params) {
+        sql += ("where `tags_name` in ('" + params.join("','") + "')");
     }
     return new Promise((resolve, reject) => {
-        mysql.query(sql, function (err, result) {
+        query(sql, function(err, result) {
             if (err) reject(err.message);
             resolve(result);
         })
     });
 }
 
-Tags.insert_into_all = function (tags_arr) {
+Tags.insert_into_all = function(tags_arr) {
     //id非0的数组
     var $old_tags = [];
     //id为0,需要批量插入的数组
@@ -39,11 +39,11 @@ Tags.insert_into_all = function (tags_arr) {
                 sql += "('" + v + "'),";
             })
             sql = sql.substr(0, sql.length - 1);
-            mysql.query(sql, (err, result) => {
-                if(err) reject(err.message);
+            query(sql, (err, result) => {
+                if (err) reject(err.message);
                 resolve($insert_tags.concat($old_tags));
             })
-        }else{
+        } else {
             resolve($insert_tags.concat($old_tags));
         }
     }).then(tags_arr => {
