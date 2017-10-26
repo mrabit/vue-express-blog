@@ -35,7 +35,7 @@
                             </el-form-item>
                             <el-form-item label="文章正文：">
                                 <div id="editormd" class="w-full-important">
-                                    <textarea style="display:none;" v-model="article.content"></textarea>
+                                    <textarea style="display:none;" v-model="content"></textarea>
                                 </div>
                             </el-form-item>
                             <el-form-item label="标签填写：">
@@ -69,8 +69,8 @@
                                 <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
                             </el-form-item>
                             <el-form-item class="pull-right">
-                              <el-button type="primary" @click="submitForm('articleForm')">立即创建</el-button>
-                              <el-button @click="resetForm('articleForm')">重置</el-button>
+                              <el-button type="primary" @click="submitForm('articleForm')">{{ submit_text }}</el-button>
+                              <el-button @click="resetForm('articleForm')" v-if="show_reset">重置</el-button>
                             </el-form-item>
                         </el-form>
                     </el-col>
@@ -88,10 +88,10 @@ export default {
   data() {
     return {
       article: {
-        title: "vue + express",
-        reprint_url: "http://www.baidu.com",
+        title: "",
+        reprint_url: "",
         private: "0",
-        content: "1. hah 2. heih",
+        content: "",
         create_user_id: 1,
         tags: {}
       },
@@ -103,20 +103,46 @@ export default {
       loading: true
     };
   },
+  computed: {
+    // 文章内容符号转码
+    content() {
+      return this.unescape(this.article.content);
+    },
+    // 提交按钮文本
+    submit_text(){
+      return this.$route.query.id?"立即更新":'立即创建'
+    },
+    // 是否显示重置按钮
+    show_reset(){
+      return !this.$route.query.id;
+    }
+  },
   methods: {
+    // 符号转码
+    unescape: function(html) {
+      return html
+        .replace(html ? /&(?!#?\w+;)/g : /&/g, "&amp;")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&nbsp;/g, " ");
+    },
+    // 删除标签
     handleClose(tag) {
       delete this.article.tags[tag];
       var clone = Object.assign({}, this.article.tags);
       this.article.tags = clone;
     },
-
+    // 点击新增标签,显示输入框
     showInput() {
       this.inputTagsVisible = true;
       this.$nextTick(_ => {
         this.$refs.saveTagInput.$refs.input.focus();
       });
     },
-
+    // 新增标签,提交输入框
     handleInputConfirm() {
       let inputTagsValue = this.inputTagsValue;
       if (inputTagsValue) {
@@ -125,7 +151,7 @@ export default {
       this.inputTagsVisible = false;
       this.inputTagsValue = "";
     },
-
+    // 获取数据库中标签数据
     get_all_tags() {
       this.$http.get("/admin/tags/get_all_tags").then(result => {
         var aaData = result.data;
@@ -135,13 +161,13 @@ export default {
         this.loading = false;
       });
     },
-
+    // 选择下拉框中已有标签
     select_tags(tags) {
       this.inputTagsValue = tags;
       this.handleInputConfirm();
       this.TagsSelected = "";
     },
-
+    // 文章提交
     submitForm(formName) {
       this.article.content = this.markdown.getMarkdown();
       if (this.$route.query.id) {
@@ -172,7 +198,7 @@ export default {
           });
       }
     },
-
+    // 文章重置
     resetForm(formName) {
       this.article = {
         title: "",
@@ -185,12 +211,13 @@ export default {
       var editormd = document.getElementsByName("clear")[0];
       editormd && editormd.parentNode.click();
     },
-
+    // 初始化
     init() {
       var id = this.$route.query.id;
       // debugger;
       (function(_this) {
         if (id) {
+          // 修改文章id存在,获取文章详情
           return _this.$http
             .get("/admin/article/get_details/" + id)
             .then(result => {
@@ -199,12 +226,14 @@ export default {
               _this.article = data;
             });
         } else {
+          // 不存在修改文章id,判断是否是修改文章页面
           _this.resetForm();
           return new Promise(resolve => {
             resolve(_this.$route.path == "/admin/article_edit.html");
           });
         }
       })(this).then(result => {
+        //结果为true,不存在修改文章id,并且链接为文章修改链接
         if (result) {
           this.$router.push("/admin/article_list.html");
           return false;
