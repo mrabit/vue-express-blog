@@ -11,7 +11,7 @@ Bing.add_img = function(params) {
 }
 
 Bing.get_image_by_time = function(time) {
-    var sql = "select * from tp_bing where img_time = '2017-10-25'";
+    var sql = "select * from tp_bing where img_time = ?";
     return new Promise((resolve, reject) => {
         query(sql, time, function(err, result) {
             if (err) reject(err.message);

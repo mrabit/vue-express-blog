@@ -125,7 +125,8 @@
                 fileInput.bind("change", function(e) {
                     var file = e.target.files[0]
                     var fileName = fileInput.val();
-                    var isImage = new RegExp("(\\.(" + settings.imageFormats.join("|") + "))$"); // /(\.(webp|jpg|jpeg|gif|bmp|png))$/
+                    var isImage = new RegExp("(\\.(" + settings.imageFormats.join("|") + "))$", "ig"); // /(\.(webp|jpg|jpeg|gif|bmp|png))$/
+                    var type = file.name.match(isImage);
 
                     if (fileName === "") {
                         alert(imageLang.uploadFileEmpty);
@@ -138,19 +139,39 @@
 
                         return false;
                     }
-                    var img = new Image();
-                    var url = img.src = URL.createObjectURL(file);
-                    loading(true);
-                    img.onload = function() {
-                        var canvas = document.createElement("canvas"), //创建canvas元素
-                            width = img.width, //确保canvas的尺寸和图片一样
-                            height = img.height;
-                        canvas.width = width;
-                        canvas.height = height;
-                        canvas.getContext("2d").drawImage(img, 0, 0, width, height); //将图片绘制到canvas中
-                        dataURL = canvas.toDataURL('image/jpeg'); //转换图片为dataURL
 
-                        $.post("/home/upload/getUpLoad.html", { image: dataURL }, (d) => {
+
+                    // 获取base64编码图片方法一
+                    // var img = new Image();
+                    // // file转blob类型,浏览器可即时显示
+                    // var url = img.src = URL.createObjectURL(file);
+                    // loading(true);
+                    // img.onload = function() {
+                    //     var canvas = document.createElement("canvas"), //创建canvas元素
+                    //         width = img.width, //确保canvas的尺寸和图片一样
+                    //         height = img.height;
+                    //     canvas.width = width;
+                    //     canvas.height = height;
+                    //     canvas.getContext("2d").drawImage(img, 0, 0, width, height); //将图片绘制到canvas中
+                    //     dataURL = canvas.toDataURL('image/jpeg'); //转换图片为dataURL
+
+                    //     $.post(settings.imageUploadURL, { image: dataURL, type: type[0] }, (d) => {
+                    //         if (d.status === 0) {
+                    //             dialog.find("[data-url]").val(d.path);
+                    //         } else {
+                    //             alert("上传失败");
+                    //         }
+                    //         loading(false);
+                    //     }, "json");
+                    // }
+
+                    // 获取base64编码图片方法二
+                    // 可获取gif图片
+                    loading(true);
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        // base64编码图片字符串
+                        $.post(settings.imageUploadURL, { image: e.target.result, type: type[0] }, (d) => {
                             if (d.status === 0) {
                                 dialog.find("[data-url]").val(d.path);
                             } else {
@@ -158,7 +179,8 @@
                             }
                             loading(false);
                         }, "json");
-                    }
+                    };
+                    reader.readAsDataURL(file);
                 });
             }
 

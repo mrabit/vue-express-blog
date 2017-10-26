@@ -3,6 +3,7 @@ import NotFoundComponent from '../components/notFound.vue';
 export default {
     path: '/admin',
     component: (resolve) => void(require(['../Admin.vue'], resolve)),
+    redirect: '/admin/index.html',
     children: [{
         path: 'index.html',
         meta: {

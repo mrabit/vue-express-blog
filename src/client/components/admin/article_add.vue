@@ -260,7 +260,7 @@ export default {
           path: "/static/js/editormd/lib/",
           imageUpload: true,
           imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-          imageUploadURL: "/home/upload/getUpLoad"
+          imageUploadURL: "/upload/local_base64"
         });
 
         this.get_all_tags();
