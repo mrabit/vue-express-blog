@@ -1,4 +1,4 @@
-var ArticleTags = require('../model/articleTags');
+var ArticleTags = require('../../model/frontend/articleTags');
 var express = require('express');
 var router = express.Router();
 

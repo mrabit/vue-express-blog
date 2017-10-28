@@ -1,4 +1,4 @@
-var query = require('./db');
+var query = require('../db');
 var util = require('util');
 
 var Article = function(params) {

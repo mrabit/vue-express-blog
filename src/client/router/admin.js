@@ -5,6 +5,14 @@ export default {
     component: (resolve) => void(require(['../Admin.vue'], resolve)),
     redirect: '/admin/index.html',
     children: [{
+        path: 'login.html',
+        meta: {
+            title: '登录'
+        },
+        components: {
+            default: (resolve) => void(require(['../components/admin/login.vue'], resolve)),
+        }
+    }, {
         path: 'index.html',
         meta: {
             title: '首页'

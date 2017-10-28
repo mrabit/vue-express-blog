@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var Bing = require('../model/bing');
+var Bing = require('../../model/frontend/bing');
 var moment = require('moment');
 var request = require('request');
-var qiniu_model = require('../model/qiniu');
-var qiniu_config = require('../config')['qiniu'];
+var qiniu_model = require('../../model/qiniu');
+var qiniu_config = require('../../config')['qiniu'];
 
 
 var get_bing_json = (params) => {

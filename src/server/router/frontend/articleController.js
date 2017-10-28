@@ -1,4 +1,4 @@
-var Article = require('../model/article');
+var Article = require('../../model/frontend/article');
 var express = require('express');
 var router = express.Router();
 
