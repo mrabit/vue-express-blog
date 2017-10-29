@@ -41,6 +41,8 @@
     </section>
 </template>
 <script>
+var WebStorageCache = require("web-storage-cache");
+var wsCache = new WebStorageCache();
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
@@ -51,7 +53,6 @@ export default {
       callback();
     };
     var validateLength = (rule, value, callback) => {
-      //   debugger;
       if (!this.formData.visibility) {
         this.formData.error = "长度在 5 到 10 个字符";
       }
@@ -77,7 +78,31 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (!this.formData.visibility) {
-          alert("submit");
+          this.$http
+            .post("/api/login", {
+              uname: this.formData.uname,
+              upwd: this.formData.upwd
+            })
+            .then(
+              result => {
+                if (result.data.success) {
+                  var token = result.data.token;
+                  wsCache.set(
+                    "token",
+                    {
+                      token: token,
+                      user: result.data.user
+                    },
+                    { exp: 60 * 5 }
+                  );
+                  this.$store.commit("changeUser", result.data.user);
+                  this.$router.push("/admin/index.html");
+                } else {
+                  this.$message.error(result.data.message);
+                }
+              },
+              err => this.$message.error(err.message)
+            );
         }
       });
     }

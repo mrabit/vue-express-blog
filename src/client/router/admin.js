@@ -7,7 +7,8 @@ export default {
     children: [{
         path: 'login.html',
         meta: {
-            title: '登录'
+            title: '登录',
+            login: true
         },
         components: {
             default: (resolve) => void(require(['../components/admin/login.vue'], resolve)),
@@ -15,7 +16,8 @@ export default {
     }, {
         path: 'index.html',
         meta: {
-            title: '首页'
+            title: '首页',
+            requireAuth: true
         },
         components: {
             default: (resolve) => void(require(['../components/admin/index.vue'], resolve)),
@@ -25,7 +27,8 @@ export default {
     }, {
         path: 'article_list.html',
         meta: {
-            title: '文章列表'
+            title: '文章列表',
+            requireAuth: true
         },
         components: {
             default: (resolve) => void(require(['../components/admin/article_list.vue'], resolve)),
@@ -35,7 +38,8 @@ export default {
     }, {
         path: 'article_add.html',
         meta: {
-            title: '新增文章'
+            title: '新增文章',
+            requireAuth: true
         },
         components: {
             default: (resolve) => void(require(['../components/admin/article_add.vue'], resolve)),
@@ -45,7 +49,8 @@ export default {
     }, {
         path: 'article_edit.html',
         meta: {
-            title: '修改文章'
+            title: '修改文章',
+            requireAuth: true
         },
         components: {
             default: (resolve) => void(require(['../components/admin/article_add.vue'], resolve)),
@@ -55,7 +60,8 @@ export default {
     }, {
         path: 'article_tags.html',
         meta: {
-            title: '标签管理'
+            title: '标签管理',
+            requireAuth: true
         },
         components: {
             default: (resolve) => void(require(['../components/admin/article_tags.vue'], resolve)),
@@ -70,7 +76,8 @@ export default {
             header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve))
         },
         meta: {
-            title: '首页'
+            title: '首页',
+            requireAuth: true
         }
     }]
 }

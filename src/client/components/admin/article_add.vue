@@ -153,7 +153,7 @@ export default {
     },
     // 获取数据库中标签数据
     get_all_tags() {
-      this.$http.get("/admin/tags/get_all_tags").then(result => {
+      this.$http.get("/api/tags/get_all_tags").then(result => {
         var aaData = result.data;
         aaData.forEach((v, k) => {
           this.tags_map[v.tags_name] = v.id;
@@ -172,7 +172,7 @@ export default {
       this.article.content = this.markdown.getMarkdown();
       if (this.$route.query.id) {
         this.$http
-          .post("/admin/article/update_article", this.article)
+          .post("/api/article/update_article", this.article)
           .then(result => {
             if (result.data.code == "200") {
               this.$router.push("/admin/article_list.html");
@@ -185,7 +185,7 @@ export default {
           });
       } else {
         this.$http
-          .post("/admin/article/insert_article", this.article)
+          .post("/api/article/insert_article", this.article)
           .then(result => {
             if (result.data.code == "200") {
               this.$router.push("/admin/article_list.html");
@@ -219,7 +219,7 @@ export default {
         if (id) {
           // 修改文章id存在,获取文章详情
           return _this.$http
-            .get("/admin/article/get_details/" + id)
+            .get("/api/article/get_details/" + id)
             .then(result => {
               var data = result.data;
               data.private = "" + data.private;

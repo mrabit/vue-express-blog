@@ -12,5 +12,10 @@ module.exports = {
         secretKey: "JNPtAMXh5mo3EMakgm8tOOumjZhk7k7HRHMS_RLI",
         bucket: "mrabit",
         domain: "http://cdn.mrabit.com/"
+    },
+    redis: {
+        host: 'biabia123456.tpddns.cn',
+        port: 6379,
+        exp: 60 * 5
     }
 }

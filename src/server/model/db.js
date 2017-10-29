@@ -26,7 +26,7 @@ Connection.prototype.query = function query(sql, values, cb, isConsole) {
 
 var pool = mysql.createPool(db_config);
 
-var query = function(sql, params, callback) {
+var query = function(sql, params, callback, isConsole = false) {
     typeof params == "function" && (callback = params, params = null);
     pool.getConnection(function(err, conn) {
         if (err) {
@@ -37,7 +37,7 @@ var query = function(sql, params, callback) {
                 conn.release();
                 //事件驱动回调
                 callback(qerr, vals, fields);
-            });
+            }, isConsole);
         }
     });
 };

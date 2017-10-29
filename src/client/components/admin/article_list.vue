@@ -137,7 +137,7 @@ export default {
   methods: {
     handleCurrentChange(currentPage = 1) {
       var url = util.format(
-        "/admin/article/get_lists/%s/%s",
+        "/api/article/get_lists/%s/%s",
         currentPage,
         this.pageSize
       );
@@ -179,7 +179,7 @@ export default {
     },
     handleDelete(row) {
       row.visable = false;
-      this.$http.post("/admin/article/delete_article",{id: row.id}).then(result => {
+      this.$http.post("/api/article/delete_article",{id: row.id}).then(result => {
         if (result.data.code == "200") {
           this.handleCurrentChange();
           this.$notify({

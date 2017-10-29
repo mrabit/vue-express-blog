@@ -12,7 +12,7 @@
             <a href="#/" class="navbar-brand text-lt">
                 <i class="fa fa-btc"></i>
                 <!--<img src="img/logo.png" alt="." class="hide">-->
-                <span class="hidden-folded m-l-xs">一桶浆糊</span>
+                <span class="hidden-folded m-l-xs">{{ user.blog_name }}</span>
             </a>
             <!-- / brand -->
         </div>
@@ -86,7 +86,7 @@
                             <img src="/Uploads/Picture/2017-06-06/59369fb016efa.png" alt="...">
                             <i class="on md b-white bottom"></i>
                         </span>
-                        <span class="hidden-sm hidden-md">admin</span>
+                        <span class="hidden-sm hidden-md">{{ user.uname }}</span>
                         <b class="caret"></b>
                     </a>
                     <!-- dropdown -->
@@ -105,74 +105,138 @@
     </header>
 </template>
 <script>
+
 export default {
-    methods: {
-        changeIsCollapse() {
-            this.$store.commit("changeIsCollapse");
-        }
-    },
-    mounted() {
-
-        //dropdown点击事件
-        +function(a) {
-            "use strict";
-            function b(b) {
-                b && 3 === b.which || (a(e).remove(), a(f).each(function() {
-                    let d = a(this), e = c(d), f = { relatedTarget: this };
-                    e.hasClass("open") && (e.trigger(b = a.Event("hide.bs.dropdown", f)), b.isDefaultPrevented() || (d.attr("aria-expanded", "false"), e.removeClass("open").trigger("hidden.bs.dropdown", f)))
-                }))
-            }
-
-            function c(b) {
-                let c = b.attr("data-target");
-                c || (c = b.attr("href"), c = c && /#[A-Za-z]/.test(c) && c.replace(/.*(?=#[^\s]*$)/, ""));
-                let d = c && a(c);
-                return d && d.length ? d : b.parent()
-            }
-
-            function d(b) {
-                return this.each(function() {
-                    let c = a(this), d = c.data("bs.dropdown");
-                    d || c.data("bs.dropdown", d = new g(this)), "string" == typeof b && d[b].call(c)
-                })
-            }
-
-            let e = ".dropdown-backdrop", f = '[data-toggle="dropdown"]', g = function(b) {
-                a(b).on("click.bs.dropdown", this.toggle);
-            };
-            g.VERSION = "3.3.4", g.prototype.toggle = function(d) {
-                let e = a(this);
-                if (!e.is(".disabled, :disabled")) {
-                    let f = c(e), g = f.hasClass("open");
-                    if (b(), !g) {
-                        "ontouchstart" in document.documentElement && !f.closest(".navbar-nav").length && a('<div class="dropdown-backdrop"/>').insertAfter(a(this)).on("click", b);
-                        let h = { relatedTarget: this };
-                        if (f.trigger(d = a.Event("show.bs.dropdown", h)), d.isDefaultPrevented()) return;
-                        e.trigger("focus").attr("aria-expanded", "true"), f.toggleClass("open").trigger("shown.bs.dropdown", h)
-                    }
-                    return !1
-                }
-            }, g.prototype.keydown = function(b) {
-                if (/(38|40|27|32)/.test(b.which) && !/input|textarea/i.test(b.target.tagName)) {
-                    let d = a(this);
-                    if (b.preventDefault(), b.stopPropagation(), !d.is(".disabled, :disabled")) {
-                        let e = c(d), g = e.hasClass("open");
-                        if (!g && 27 != b.which || g && 27 == b.which) return 27 == b.which && e.find(f).trigger("focus"), d.trigger("click");
-                        let h = " li:not(.disabled):visible a", i = e.find('[role="menu"]' + h + ', [role="listbox"]' + h);
-                        if (i.length) {
-                            let j = i.index(b.target);
-                            38 == b.which && j > 0 && j-- , 40 == b.which && j < i.length - 1 && j++ , ~j || (j = 0), i.eq(j).trigger("focus")
-                        }
-                    }
-                }
-            };
-            let h = a.fn.dropdown;
-            a.fn.dropdown = d, a.fn.dropdown.Constructor = g, a.fn.dropdown.noConflict = function() {
-                return a.fn.dropdown = h, this
-            }, a(document).on("click.bs.dropdown.data-api", b).on("click.bs.dropdown.data-api", ".dropdown form", function(a) {
-                a.stopPropagation()
-            }).on("click.bs.dropdown.data-api", f, g.prototype.toggle).on("keydown.bs.dropdown.data-api", f, g.prototype.keydown).on("keydown.bs.dropdown.data-api", '[role="menu"]', g.prototype.keydown).on("keydown.bs.dropdown.data-api", '[role="listbox"]', g.prototype.keydown)
-        }(jQuery);
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
     }
-}
+  },
+  methods: {
+    changeIsCollapse() {
+      this.$store.commit("changeIsCollapse");
+    }
+  },
+  created() {
+    //dropdown点击事件
+    +(function(a) {
+      "use strict";
+      function b(b) {
+        (b && 3 === b.which) ||
+          (a(e).remove(),
+          a(f).each(function() {
+            let d = a(this),
+              e = c(d),
+              f = { relatedTarget: this };
+            e.hasClass("open") &&
+              (e.trigger((b = a.Event("hide.bs.dropdown", f))),
+              b.isDefaultPrevented() ||
+                (d.attr("aria-expanded", "false"),
+                e.removeClass("open").trigger("hidden.bs.dropdown", f)));
+          }));
+      }
+
+      function c(b) {
+        let c = b.attr("data-target");
+        c ||
+          ((c = b.attr("href")),
+          (c = c && /#[A-Za-z]/.test(c) && c.replace(/.*(?=#[^\s]*$)/, "")));
+        let d = c && a(c);
+        return d && d.length ? d : b.parent();
+      }
+
+      function d(b) {
+        return this.each(function() {
+          let c = a(this),
+            d = c.data("bs.dropdown");
+          d || c.data("bs.dropdown", (d = new g(this))),
+            "string" == typeof b && d[b].call(c);
+        });
+      }
+
+      let e = ".dropdown-backdrop",
+        f = '[data-toggle="dropdown"]',
+        g = function(b) {
+          a(b).on("click.bs.dropdown", this.toggle);
+        };
+      (g.VERSION = "3.3.4"),
+        (g.prototype.toggle = function(d) {
+          let e = a(this);
+          if (!e.is(".disabled, :disabled")) {
+            let f = c(e),
+              g = f.hasClass("open");
+            if ((b(), !g)) {
+              "ontouchstart" in document.documentElement &&
+                !f.closest(".navbar-nav").length &&
+                a('<div class="dropdown-backdrop"/>')
+                  .insertAfter(a(this))
+                  .on("click", b);
+              let h = { relatedTarget: this };
+              if (
+                (f.trigger((d = a.Event("show.bs.dropdown", h))),
+                d.isDefaultPrevented())
+              )
+                return;
+              e.trigger("focus").attr("aria-expanded", "true"),
+                f.toggleClass("open").trigger("shown.bs.dropdown", h);
+            }
+            return !1;
+          }
+        }),
+        (g.prototype.keydown = function(b) {
+          if (
+            /(38|40|27|32)/.test(b.which) &&
+            !/input|textarea/i.test(b.target.tagName)
+          ) {
+            let d = a(this);
+            if (
+              (b.preventDefault(),
+              b.stopPropagation(),
+              !d.is(".disabled, :disabled"))
+            ) {
+              let e = c(d),
+                g = e.hasClass("open");
+              if ((!g && 27 != b.which) || (g && 27 == b.which))
+                return (
+                  27 == b.which && e.find(f).trigger("focus"),
+                  d.trigger("click")
+                );
+              let h = " li:not(.disabled):visible a",
+                i = e.find('[role="menu"]' + h + ', [role="listbox"]' + h);
+              if (i.length) {
+                let j = i.index(b.target);
+                38 == b.which && j > 0 && j--,
+                  40 == b.which && j < i.length - 1 && j++,
+                  ~j || (j = 0),
+                  i.eq(j).trigger("focus");
+              }
+            }
+          }
+        });
+      let h = a.fn.dropdown;
+      (a.fn.dropdown = d),
+        (a.fn.dropdown.Constructor = g),
+        (a.fn.dropdown.noConflict = function() {
+          return (a.fn.dropdown = h), this;
+        }),
+        a(document)
+          .on("click.bs.dropdown.data-api", b)
+          .on("click.bs.dropdown.data-api", ".dropdown form", function(a) {
+            a.stopPropagation();
+          })
+          .on("click.bs.dropdown.data-api", f, g.prototype.toggle)
+          .on("keydown.bs.dropdown.data-api", f, g.prototype.keydown)
+          .on(
+            "keydown.bs.dropdown.data-api",
+            '[role="menu"]',
+            g.prototype.keydown
+          )
+          .on(
+            "keydown.bs.dropdown.data-api",
+            '[role="listbox"]',
+            g.prototype.keydown
+          );
+    })(jQuery);
+  }
+};
 </script>

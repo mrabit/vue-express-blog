@@ -1,11 +1,23 @@
 var jwt = require('jsonwebtoken');
-var md5 = require('md5');
 var app = require('../app');
+var redis = require('../model/redis_db');
+
+var err_page = (res, result, status = 403) => {
+    result['success'] = false;
+    result['status'] = 'NOTLOGIN';
+    res.status(status).json(result);
+}
 
 module.exports = function(req, res, next) {
+    var reg = /^\/api\/*/;
+    // 非后台api接口,放行
+    if(req.path.search(reg) < 0 || req.path == '/api/login'){
+        return next();
+    }
+    // 后台api接口,判断token
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (token) {
-        //验证token是否失效
+        // 验证token是否失效
         new Promise((resolve, reject) => {
                 jwt.verify(token, app.get('secret'), function(err, decoded) {
                     if (err) {
@@ -17,7 +29,7 @@ module.exports = function(req, res, next) {
                     resolve(decoded);
                 })
             }).then(decoded => {
-                //验证是否与当前token一致
+                // 验证是否与当前token一致
                 return redis.validator(decoded.uname, token).then(result => {
                     if (!result) {
                         return Promise.reject({
@@ -28,8 +40,8 @@ module.exports = function(req, res, next) {
                     return decoded;
                 })
             }).then(decoded => {
-                //更新当前字段过期时间
-                return redis.expire(decoded.uname).then(flag => {
+                // 更新当前字段过期时间
+                return redis.expire(decoded.uname, require('../config')['redis']['exp']).then(flag => {
                     if (flag) {
                         req.decoded = decoded
                         next()
@@ -49,7 +61,7 @@ module.exports = function(req, res, next) {
         // 接收token不存在
         err_page(res, {
             code: 105,
-            message: 'token数据不存在,暂时无法访问该页面.'
+            message: 'token无效,暂时无法访问该页面.'
         });
     }
 }

@@ -2,25 +2,28 @@ var express = require('express');
 var path = require('path');
 var app = require('./app');
 
+app.use(express.static(path.join(__dirname, 'public')));
+// 中间件判断token
+app.use(require('./router/middleware'));
+
 // 配合vue渲染页面
 app.use('/', require('./router/router'));
 
-// 前端页面路由
+// 前端接口路由
 app.use('/article', require('./router/frontend/articleController'));
 app.use('/article_tags', require('./router/frontend/articleTagsController'));
 app.use('/bing', require('./router/frontend/bingController'));
 
-// 后台登录
-app.use('/admin', require('./router/admin/userController'));
+// 后台登录接口
+app.use('/api', require('./router/admin/userController'));
 
-// 后台页面路由
-app.use('/admin/article', require('./router/admin/articleController'));
-app.use('/admin/tags', require('./router/admin/tagsController'));
+// 后台接口路由
+app.use('/api/article', require('./router/admin/articleController'));
+app.use('/api/tags', require('./router/admin/tagsController'));
 
 // 上传
 app.use('/upload', require('./router/uploadController'));
 
-app.use(express.static(path.join(__dirname, 'public')));
 
 if (process.env.NODE_ENV == 'development') {
     var webpack = require('webpack');

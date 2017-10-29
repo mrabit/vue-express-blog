@@ -1,10 +1,10 @@
 <style>
 .bg-dark {
-    background-color: #324157;
+  background-color: #324157;
 }
 
 .el-menu--collapse {
-    width: 60px;
+  width: 60px;
 }
 </style>
 
@@ -20,10 +20,10 @@
                 <a href="#" class=" hidden-folded">
                     <span class="clear">
                         <span class="block m-t-sm">
-                            <strong class="font-bold text-lt">一桶浆糊</strong>
+                            <strong class="font-bold text-lt">{{ user.uname }}</strong>
                         </span>
                         <span class="text-muted text-xs block">欢迎回来.</span>
-                        <span class="text-muted text-xs block">上次登录:2017-10-10 23:15</span>
+                        <span class="text-muted text-xs block">上次登录: {{ user.last_login_time | format_time }}</span>
                     </span>
                     <div class="quick-stats">
                         <ul class="no-padder">
@@ -77,38 +77,46 @@
     </div>
 </template>
 <script>
+import moment from 'moment';
 export default {
-    data() {
-        return {
-            offScreen: false
-        }
+  data() {
+    return {
+      offScreen: false
+    };
+  },
+  filters: {
+      format_time(time){
+          return moment(time * 1000).format('YYYY-MM-DD');
+      }
+  },
+  computed: {
+    user() {
+      return this.$store.getters.getUser;
     },
-    computed: {
-        isCollapse() {
-            var boolean = this.$store.getters.getIsCollapse;
-            var body = document.body;
-            if (body.clientWidth <= 768) {
-                this.offScreen = boolean;
-                return false;
-            } else {
-                boolean ?
-                    body.classList.add('app-aside-folded') :
-                    body.classList.remove('app-aside-folded');
-            }
+    isCollapse() {
+      var boolean = this.$store.getters.getIsCollapse;
+      var body = document.body;
+      if (body.clientWidth <= 768) {
+        this.offScreen = boolean;
+        return false;
+      } else {
+        boolean
+          ? body.classList.add("app-aside-folded")
+          : body.classList.remove("app-aside-folded");
+      }
 
-            return boolean;
-        }
-    },
-    methods: {
-        select_menu(index) {
-            var isOpened = document.getElementsByClassName('is-opened')[0];
-            if (index.indexOf('-') < 0 && isOpened) {
-                var elMenu = isOpened.getElementsByClassName('el-submenu__title')[0];
-                elMenu.click();
-            }
-        }
-    },
-    created() {
+      return boolean;
     }
-}
+  },
+  methods: {
+    select_menu(index) {
+      var isOpened = document.getElementsByClassName("is-opened")[0];
+      if (index.indexOf("-") < 0 && isOpened) {
+        var elMenu = isOpened.getElementsByClassName("el-submenu__title")[0];
+        elMenu.click();
+      }
+    }
+  },
+  created() {}
+};
 </script>

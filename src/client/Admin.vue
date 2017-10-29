@@ -5,3 +5,12 @@
     <router-view></router-view>
   </div>
 </template>
+<script>
+import webStorageCache from "web-storage-cache";
+var wsCache = new webStorageCache();
+export default {
+  created() {
+    this.$store.commit("changeUser", (wsCache.get("token") || {})["user"]);
+  }
+};
+</script>
