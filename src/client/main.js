@@ -38,7 +38,7 @@ router.beforeEach((to, from, next) => {
             return next('/admin/login.html')
         }
         // 刷新本地token过期时间
-        wsCache.touch('token', 60 * 5);
+        wsCache.touch('token', 60 * 60);
     }
     nProgress.start();
     next();

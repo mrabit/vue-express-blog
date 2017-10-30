@@ -10,7 +10,7 @@ axios.interceptors.request.use(config => {
     // 获取本地储存token,加入请求header
     config.headers['x-access-token'] = (wsCache.get('token') || {}).token;
     // 更新token时间
-    wsCache.touch('token', 60 * 5);
+    wsCache.touch('token', 60 * 60);
     return config
 }, err => {
     return Promise.reject(err);

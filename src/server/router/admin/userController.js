@@ -7,7 +7,7 @@ var User = require('../../model/admin/user');
 var redis = require('../../model/redis_db');
 var exp = require('../../config')['redis']['exp'];
 
-router.post('/login', function (req, res) {
+router.post('/login', function(req, res) {
     var user = {
         uname: req.body.uname,
         upwd: md5(req.body.upwd)
@@ -27,21 +27,28 @@ router.post('/login', function (req, res) {
             }, app.get('secret'), {
                 expiresIn: exp
             })
-            redis.redisClient.set(req.body.uname, token);
-            redis.redisClient.expire(req.body.uname, exp);
-            res.json({
-                success: true,
-                message: '登录成功.',
-                token: token,
-                user: result
-            })
+            redis.set(req.body.uname, token).then(_ => {
+                return redis.expire(req.body.uname, exp)
+            }).then(_ => {
+                res.json({
+                    success: true,
+                    message: '登录成功.',
+                    token: token,
+                    user: result
+                })
+            }).catch(err => {
+                res.json({
+                    success: false,
+                    err
+                })
+            });
         }
     }, err => {
         res.json(err);
     })
 })
 
-router.post('/check_token', function (req, res) {
+router.post('/check_token', function(req, res) {
     res.json({
         success: true,
         code: 200

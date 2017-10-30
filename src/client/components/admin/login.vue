@@ -24,10 +24,13 @@
                     </div>
                     <p class="h4 m-t m-b">{{ formData.uname }}</p>
                     <el-form :inline="true" :model="formData" :rules="rules" class="m-t" ref="formData">
-                        <el-form-item prop="upwd">
+                        <el-form-item>
+                          <el-input type="password" placeholder="输入密码进行下一步" class="hide"></el-input>
+                        </el-form-item>
+                        <el-form-item>
                             <el-input type="password" placeholder="输入密码进行下一步" v-model="formData.upwd" class="input-with-login"
-                                @focus="formData.visibility = false">
-                                <el-button slot="append" class="btn btn-success no-border" @click="submitForm('formData')">
+                                @focus="formData.visibility = false" @keyup.enter.native="submitForm('formData')">
+                                <el-button slot="append" class="btn btn-success no-border" type="button" @click="submitForm('formData')">
                                     <i class="fa fa-arrow-right"></i>
                                 </el-button>
                             </el-input>
@@ -105,6 +108,7 @@ export default {
             );
         }
       });
+      return false;
     }
   }
 };

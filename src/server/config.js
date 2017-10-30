@@ -14,8 +14,9 @@ module.exports = {
         domain: "http://cdn.mrabit.com/"
     },
     redis: {
-        host: 'biabia123456.tpddns.cn',
+        host: '120.24.72.90',
         port: 6379,
-        exp: 60 * 5
+        auth_pass: '519296987',
+        exp: 60 * 60
     }
 }
