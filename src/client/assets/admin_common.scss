@@ -90,3 +90,15 @@
         }
     }
 }
+
+.el-dropdown-menu__item {
+    min-width: 160px;
+}
+
+.el-dropdown {
+    cursor: pointer;
+    &:hover,
+    &:focus {
+        background-color: rgba(17, 7, 7, 0.05);
+    }
+}

@@ -14,6 +14,7 @@ redisClient.on('connect', function() {
 
 module.exports = {
     redisClient: redisClient,
+    // 新增键值
     set: (key, token) => {
         key = "blog_" + key;
         return new Promise((resolve, reject) => {
@@ -23,6 +24,16 @@ module.exports = {
             })
         })
         redis.redisClient.set(req.body.uname, token);
+    },
+    // 删除当前指定键值
+    del: (key) => {
+        key = "blog_" + key;
+        return new Promise((resolve, reject) => {
+            redisClient.del(key, (err, result) => {
+                if (err) reject(err);
+                resolve(result);
+            })
+        });
     },
     // 当前键是否存在
     exists: (key) => {

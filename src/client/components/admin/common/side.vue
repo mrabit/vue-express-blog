@@ -12,12 +12,12 @@
     <div class="app-aside hidden-xs bg-dark" :class="{'off-screen': offScreen}">
         <div class="clearfix hidden-xs text-center hide show" id="aside-user">
             <div class="dropdown wrapper">
-                <a href="app.page.profile">
+                <div>
                     <span class="thumb-lg w-auto-folded avatar m-t-sm">
-                        <img src="/Uploads/Picture/2017-06-06/59369fb016efa.png" class="img-full" alt="...">
+                        <img :src="user.user_header_img" class="img-full" alt="...">
                     </span>
-                </a>
-                <a href="#" class=" hidden-folded">
+                </div>
+                <div class=" hidden-folded">
                     <span class="clear">
                         <span class="block m-t-sm">
                             <strong class="font-bold text-lt">{{ user.uname }}</strong>
@@ -44,7 +44,7 @@
                             </li>
                         </ul>
                     </div>
-                </a>
+                </div>
             </div>
             <div class="line dk hidden-folded"></div>
         </div>
@@ -73,6 +73,15 @@
                     <el-menu-item index="/admin/article_tags.html">标签展示</el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="4" class="bg-dark">
+                <template slot="title">
+                    <i class="el-icon-message"></i>
+                    <span slot="title">用户管理</span>
+                </template>
+                <el-menu-item-group>
+                    <el-menu-item index="/admin/profile.html">修改资料</el-menu-item>
+                </el-menu-item-group>
+            </el-submenu>
         </el-menu>
     </div>
 </template>
@@ -86,7 +95,7 @@ export default {
   },
   filters: {
       format_time(time){
-          return moment(time * 1000).format('YYYY-MM-DD');
+          return moment(time * 1000).format('YYYY-MM-DD HH:mm');
       }
   },
   computed: {

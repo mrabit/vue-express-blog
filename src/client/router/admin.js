@@ -69,6 +69,17 @@ export default {
             header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
         }
     }, {
+        path: 'profile.html',
+        meta: {
+            title: '修改资料',
+            requireAuth: true
+        },
+        components: {
+            default: (resolve) => void(require(['../components/admin/profile.vue'], resolve)),
+            side: (resolve) => void(require(['../components/admin/common/side.vue'], resolve)),
+            header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
+        }
+    }, {
         path: '/admin/*',
         components: {
             default: NotFoundComponent,

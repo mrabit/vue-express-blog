@@ -1,3 +1,9 @@
+<style scoped>
+.verticalCenter {
+  min-height: 50px;
+}
+</style>
+
 <template>
     <header id="header" class="app-header navbar" role="menu">
         <!-- navbar header -->
@@ -11,7 +17,6 @@
             <!-- brand -->
             <a href="#/" class="navbar-brand text-lt">
                 <i class="fa fa-btc"></i>
-                <!--<img src="img/logo.png" alt="." class="hide">-->
                 <span class="hidden-folded m-l-xs">{{ user.blog_name }}</span>
             </a>
             <!-- / brand -->
@@ -26,41 +31,19 @@
                     <i class="fa fa-dedent fa-fw text"></i>
                     <i class="fa fa-indent fa-fw text-active"></i>
                 </div>
-                <!--<a href="#" class="btn no-shadow navbar-btn" ui-toggle-class="show" target="#aside-user">-->
-                <!--<i class="icon-user fa-fw"></i>-->
-                <!--</a>-->
             </div>
             <!-- / buttons -->
 
             <!-- link and dropdown -->
-            <ul class="nav navbar-nav hidden-sm">
-                <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">
-                        <i class="fa fa-fw fa-plus visible-xs-inline-block"></i>
-                        <span translate="header.navbar.new.NEW">New</span>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a href="/admin/article/add.html" data-event="article_list">新文章</a>
-                        </li>
-                        <!--<li>-->
-                        <!--<a href="">-->
-                        <!--<span class="badge bg-info pull-right">5</span>-->
-                        <!--<span translate="header.navbar.new.TASK">Task</span>-->
-                        <!--</a>-->
-                        <!--</li>-->
-                        <!--<li><a href="" translate="header.navbar.new.USER">User</a></li>-->
-                        <!--<li class="divider"></li>-->
-                        <!--<li>-->
-                        <!--<a href="">-->
-                        <!--<span class="badge bg-danger pull-right">4</span>-->
-                        <!--<span translate="header.navbar.new.EMAIL">Email</span>-->
-                        <!--</a>-->
-                        <!--</li>-->
-                    </ul>
-                </li>
-            </ul>
+            <el-dropdown class="nav navbar-nav hidden-xs w-xxs text-center" placement="bottom-end" style="line-height: 50px">
+              <span class="el-dropdown-link verticalCenter">
+                <span class="hidden-sm hidden-md">New</span>
+                <b class="caret"></b>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>新文章</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <!-- / link and dropdown -->
 
             <!-- search form -->
@@ -79,33 +62,28 @@
             <!-- / search form -->
 
             <!-- nabar right -->
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" data-toggle="dropdown" class="dropdown-toggle clear">
-                        <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
-                            <img src="/Uploads/Picture/2017-06-06/59369fb016efa.png" alt="...">
-                            <i class="on md b-white bottom"></i>
-                        </span>
-                        <span class="hidden-sm hidden-md">{{ user.uname }}</span>
-                        <b class="caret"></b>
-                    </a>
-                    <!-- dropdown -->
-                    <ul class="dropdown-menu  w">
-                        <!--<li class="divider"></li>-->
-                        <li>
-                            <a class="no-ajax" href="/admin/login/logout.html">退出登录</a>
-                        </li>
-                    </ul>
-                    <!-- / dropdown -->
-                </li>
-            </ul>
+            
+            <el-dropdown class="nav navbar-nav navbar-right padder" @command="logout" placement="top">
+              <span class="el-dropdown-link verticalCenter">
+                <span class="hidden-sm hidden-md">{{ user.uname }}</span>
+                <b class="caret m-r-sm"></b>
+                <span class="thumb-sm avatar">
+                    <img :src="user.user_header_img" alt="...">
+                    <i class="on md b-white bottom"></i>
+                </span>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <!-- / navbar right -->
         </div>
         <!-- / navbar collapse -->
     </header>
 </template>
 <script>
-
+import webStorageCache from "web-storage-cache";
+var wsCache = new webStorageCache();
 export default {
   computed: {
     user() {
@@ -115,128 +93,28 @@ export default {
   methods: {
     changeIsCollapse() {
       this.$store.commit("changeIsCollapse");
+    },
+    logout() {
+      this.$http
+        .post("/api/logout", {
+          key: this.$store.getters.getUser.uname
+        })
+        .then(
+          result => {
+            wsCache.delete("token");
+            this.$store.commit("changeUser", {});
+            this.$router.replace({
+              path: "/admin/login.html"
+            });
+          },
+          err => {
+            console.log(err);
+          }
+        );
     }
   },
   created() {
-    //dropdown点击事件
-    +(function(a) {
-      "use strict";
-      function b(b) {
-        (b && 3 === b.which) ||
-          (a(e).remove(),
-          a(f).each(function() {
-            let d = a(this),
-              e = c(d),
-              f = { relatedTarget: this };
-            e.hasClass("open") &&
-              (e.trigger((b = a.Event("hide.bs.dropdown", f))),
-              b.isDefaultPrevented() ||
-                (d.attr("aria-expanded", "false"),
-                e.removeClass("open").trigger("hidden.bs.dropdown", f)));
-          }));
-      }
-
-      function c(b) {
-        let c = b.attr("data-target");
-        c ||
-          ((c = b.attr("href")),
-          (c = c && /#[A-Za-z]/.test(c) && c.replace(/.*(?=#[^\s]*$)/, "")));
-        let d = c && a(c);
-        return d && d.length ? d : b.parent();
-      }
-
-      function d(b) {
-        return this.each(function() {
-          let c = a(this),
-            d = c.data("bs.dropdown");
-          d || c.data("bs.dropdown", (d = new g(this))),
-            "string" == typeof b && d[b].call(c);
-        });
-      }
-
-      let e = ".dropdown-backdrop",
-        f = '[data-toggle="dropdown"]',
-        g = function(b) {
-          a(b).on("click.bs.dropdown", this.toggle);
-        };
-      (g.VERSION = "3.3.4"),
-        (g.prototype.toggle = function(d) {
-          let e = a(this);
-          if (!e.is(".disabled, :disabled")) {
-            let f = c(e),
-              g = f.hasClass("open");
-            if ((b(), !g)) {
-              "ontouchstart" in document.documentElement &&
-                !f.closest(".navbar-nav").length &&
-                a('<div class="dropdown-backdrop"/>')
-                  .insertAfter(a(this))
-                  .on("click", b);
-              let h = { relatedTarget: this };
-              if (
-                (f.trigger((d = a.Event("show.bs.dropdown", h))),
-                d.isDefaultPrevented())
-              )
-                return;
-              e.trigger("focus").attr("aria-expanded", "true"),
-                f.toggleClass("open").trigger("shown.bs.dropdown", h);
-            }
-            return !1;
-          }
-        }),
-        (g.prototype.keydown = function(b) {
-          if (
-            /(38|40|27|32)/.test(b.which) &&
-            !/input|textarea/i.test(b.target.tagName)
-          ) {
-            let d = a(this);
-            if (
-              (b.preventDefault(),
-              b.stopPropagation(),
-              !d.is(".disabled, :disabled"))
-            ) {
-              let e = c(d),
-                g = e.hasClass("open");
-              if ((!g && 27 != b.which) || (g && 27 == b.which))
-                return (
-                  27 == b.which && e.find(f).trigger("focus"),
-                  d.trigger("click")
-                );
-              let h = " li:not(.disabled):visible a",
-                i = e.find('[role="menu"]' + h + ', [role="listbox"]' + h);
-              if (i.length) {
-                let j = i.index(b.target);
-                38 == b.which && j > 0 && j--,
-                  40 == b.which && j < i.length - 1 && j++,
-                  ~j || (j = 0),
-                  i.eq(j).trigger("focus");
-              }
-            }
-          }
-        });
-      let h = a.fn.dropdown;
-      (a.fn.dropdown = d),
-        (a.fn.dropdown.Constructor = g),
-        (a.fn.dropdown.noConflict = function() {
-          return (a.fn.dropdown = h), this;
-        }),
-        a(document)
-          .on("click.bs.dropdown.data-api", b)
-          .on("click.bs.dropdown.data-api", ".dropdown form", function(a) {
-            a.stopPropagation();
-          })
-          .on("click.bs.dropdown.data-api", f, g.prototype.toggle)
-          .on("keydown.bs.dropdown.data-api", f, g.prototype.keydown)
-          .on(
-            "keydown.bs.dropdown.data-api",
-            '[role="menu"]',
-            g.prototype.keydown
-          )
-          .on(
-            "keydown.bs.dropdown.data-api",
-            '[role="listbox"]',
-            g.prototype.keydown
-          );
-    })(jQuery);
+    
   }
 };
 </script>

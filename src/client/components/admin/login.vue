@@ -29,13 +29,15 @@
                         </el-form-item>
                         <el-form-item>
                             <el-input type="password" placeholder="输入密码进行下一步" v-model="formData.upwd" class="input-with-login"
-                                @focus="formData.visibility = false" @keyup.enter.native="submitForm('formData')">
+                                @focus="formData.visibility = false" @keyup.enter.native="submitForm('formData')" :disabled="formData.logining">
                                 <el-button slot="append" class="btn btn-success no-border" type="button" @click="submitForm('formData')">
-                                    <i class="fa fa-arrow-right"></i>
+                                    <i class="fa fa-arrow-right" :class="{'fa-spin fa-spinner': formData.logining}"></i>
                                 </el-button>
                             </el-input>
-                            <span class="help-block m-b-none text-danger m-t-none text-left text-xs" :style="{ visibility: formData.visibility?'visible':'hidden' }"
+                            <span v-if="!formData.logining" class="help-block m-b-none text-danger m-t-none text-left text-xs" :style="{ visibility: formData.visibility?'visible':'hidden' }"
                              style="line-height: 18px">{{ formData.error }}</span>
+                            <span v-if="formData.logining" class="help-block m-b-none text-success m-t-none text-left text-xs" :style="{ visibility: formData.logining?'visible':'hidden' }"
+                             style="line-height: 18px">正在登录, 请稍候...</span>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -67,7 +69,8 @@ export default {
         uname: "admin",
         upwd: "",
         error: "密码错误,请重试",
-        visibility: false
+        visibility: false,
+        logining: false
       },
       rules: {
         upwd: [
@@ -81,6 +84,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (!this.formData.visibility) {
+          this.formData.logining = true;
           this.$http
             .post("/api/login", {
               uname: this.formData.uname,
@@ -88,21 +92,24 @@ export default {
             })
             .then(
               result => {
-                if (result.data.success) {
-                  var token = result.data.token;
-                  wsCache.set(
-                    "token",
-                    {
-                      token: token,
-                      user: result.data.user
-                    },
-                    { exp: 60 * 5 }
-                  );
-                  this.$store.commit("changeUser", result.data.user);
-                  this.$router.push("/admin/index.html");
-                } else {
-                  this.$message.error(result.data.message);
-                }
+                setTimeout(_ => {
+                  if (result.data.success) {
+                    var token = result.data.token;
+                    wsCache.set(
+                      "token",
+                      {
+                        token: token,
+                        user: result.data.user
+                      },
+                      { exp: 60 * 5 }
+                    );
+                    this.$store.commit("changeUser", result.data.user);
+                    this.$router.push("/admin/index.html");
+                  } else {
+                    this.formData.logining = false;
+                    this.$message.error(result.data.message);
+                  }
+                }, 1500);
               },
               err => this.$message.error(err.message)
             );

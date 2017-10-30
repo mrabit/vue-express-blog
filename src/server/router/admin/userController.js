@@ -48,6 +48,42 @@ router.post('/login', function(req, res) {
     })
 })
 
+router.post('/logout', function(req, res) {
+    var key = req.body.key;
+    redis.del(key).then(result => {
+        res.json({
+            success: true,
+            code: 200
+        });
+    }, err => {
+        res.sendStatus(403).json(err);
+    })
+})
+
+router.get('/profile', (req, res) => {
+    User.get_profile_by_id(req.query.id).then(result => {
+        res.json({
+            success: true,
+            code: 200,
+            result
+        })
+    }, err => {
+        res.json(err)
+    })
+})
+
+router.post('/edit_profile', (req, res) => {
+    User.edit_profile(req.body).then(result => {
+        res.json({
+            success: true,
+            code: 200,
+            result
+        });
+    }, err => {
+        res.json(err);
+    })
+})
+
 router.post('/check_token', function(req, res) {
     res.json({
         success: true,
