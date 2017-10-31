@@ -1,7 +1,7 @@
 <style scoped>
-    .m-h{
-        min-height: 100hv;
-    }
+.m-h {
+  min-height: 100hv;
+}
 </style>
 
 <template>
@@ -15,9 +15,9 @@
     </div>
 </template>
 <script>
-    export default {
-        props: {
-            show: Boolean
-        }
-    }
+export default {
+  props: {
+    show: Boolean
+  }
+};
 </script>

@@ -109,11 +109,11 @@ export default {
       return this.unescape(this.article.content);
     },
     // 提交按钮文本
-    submit_text(){
-      return this.$route.query.id?"立即更新":'立即创建'
+    submit_text() {
+      return this.$route.query.id ? "立即更新" : "立即创建";
     },
     // 是否显示重置按钮
-    show_reset(){
+    show_reset() {
       return !this.$route.query.id;
     }
   },
@@ -153,12 +153,15 @@ export default {
     },
     // 获取数据库中标签数据
     get_all_tags() {
-      this.$http.get("/api/tags/get_all_tags").then(result => {
-        var aaData = result.data;
-        aaData.forEach((v, k) => {
-          this.tags_map[v.tags_name] = v.id;
-        });
-        this.loading = false;
+      this.$http.get("/api/tags/get_all_tags").then(d => {
+        var data = d.data;
+        if (data.success) {
+          var aaData = data.result;
+          aaData.forEach((v, k) => {
+            this.tags_map[v.tags_name] = v.id;
+          });
+          this.loading = false;
+        }
       });
     },
     // 选择下拉框中已有标签
@@ -171,31 +174,27 @@ export default {
     submitForm(formName) {
       this.article.content = this.markdown.getMarkdown();
       if (this.$route.query.id) {
-        this.$http
-          .post("/api/article/update_article", this.article)
-          .then(result => {
-            if (result.data.code == "200") {
-              this.$router.push("/admin/article_list.html");
-              this.$notify({
-                title: "成功",
-                message: "文章更新成功!",
-                type: "success"
-              });
-            }
-          });
+        this.$http.post("/api/article/update_article", this.article).then(d => {
+          if (d.data.success) {
+            this.$router.push("/admin/article_list.html");
+            this.$notify({
+              title: "成功",
+              message: "文章更新成功!",
+              type: "success"
+            });
+          }
+        });
       } else {
-        this.$http
-          .post("/api/article/insert_article", this.article)
-          .then(result => {
-            if (result.data.code == "200") {
-              this.$router.push("/admin/article_list.html");
-              this.$notify({
-                title: "成功",
-                message: "文章新增成功!",
-                type: "success"
-              });
-            }
-          });
+        this.$http.post("/api/article/insert_article", this.article).then(d => {
+          if (d.data.success) {
+            this.$router.push("/admin/article_list.html");
+            this.$notify({
+              title: "成功",
+              message: "文章新增成功!",
+              type: "success"
+            });
+          }
+        });
       }
     },
     // 文章重置
@@ -218,13 +217,14 @@ export default {
       (function(_this) {
         if (id) {
           // 修改文章id存在,获取文章详情
-          return _this.$http
-            .get("/api/article/get_details/" + id)
-            .then(result => {
-              var data = result.data;
-              data.private = "" + data.private;
-              _this.article = data;
-            });
+          return _this.$http.get("/api/article/get_details/" + id).then(d => {
+            var data = d.data;
+            if (data.success) {
+              var result = data.result;
+              result.private = "" + result.private;
+              _this.article = result;
+            }
+          });
         } else {
           // 不存在修改文章id,判断是否是修改文章页面
           _this.resetForm();

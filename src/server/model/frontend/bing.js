@@ -1,8 +1,6 @@
 var query = require('../db');
 
-var Bing = function() {
-
-}
+var Bing = _ => {}
 
 module.exports = Bing;
 

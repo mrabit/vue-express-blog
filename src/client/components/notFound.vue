@@ -14,12 +14,12 @@
     </section>
 </template>
 <script>
-    export default {
-        computed: {
-            className(){
-                var reg = /\/admin\/*/;
-                return reg.test(this.$route.path);
-            }
-        }
+export default {
+  computed: {
+    className() {
+      var reg = /\/admin\/*/;
+      return reg.test(this.$route.path);
     }
+  }
+};
 </script>

@@ -103,7 +103,7 @@ export default {
                       },
                       { exp: 60 * 5 }
                     );
-                    this.$store.commit("changeUser", result.data.user);
+                    this.$store.commit("admin/changeUser", result.data.user);
                     this.$router.push("/admin/index.html");
                   } else {
                     this.formData.logining = false;

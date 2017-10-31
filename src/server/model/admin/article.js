@@ -1,8 +1,6 @@
 var query = require('../db');
 
-var Article = function() {
-
-}
+var Article = _ => {}
 
 Article.get_article_by_id = function(id) {
     var sql = 'SELECT id,title,reprint_url,private,content from tp_article';

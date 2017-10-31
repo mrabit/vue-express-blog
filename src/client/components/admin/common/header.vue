@@ -87,22 +87,22 @@ var wsCache = new webStorageCache();
 export default {
   computed: {
     user() {
-      return this.$store.getters.getUser;
+      return this.$store.getters['admin/getUser'];
     }
   },
   methods: {
     changeIsCollapse() {
-      this.$store.commit("changeIsCollapse");
+      this.$store.commit("admin/changeIsCollapse");
     },
     logout() {
       this.$http
         .post("/api/logout", {
-          key: this.$store.getters.getUser.uname
+          key: this.user.uname
         })
         .then(
           result => {
             wsCache.delete("token");
-            this.$store.commit("changeUser", {});
+            this.$store.commit("admin/changeUser", {});
             this.$router.replace({
               path: "/admin/login.html"
             });

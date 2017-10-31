@@ -11,7 +11,7 @@ var err_page = (res, result, status = 403) => {
 module.exports = function(req, res, next) {
     var reg = /^\/api\/*/;
     // 非后台api接口,放行
-    if(req.path.search(reg) < 0 || req.path == '/api/login'){
+    if (req.path.search(reg) < 0 || req.path == '/api/login') {
         return next();
     }
     // 后台api接口,判断token

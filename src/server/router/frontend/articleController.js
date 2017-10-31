@@ -6,7 +6,11 @@ var router = express.Router();
 router.get('/get_details/:id', function(req, res) {
     var id = req.params.id;
     Article.get_article_by_id(id).then((result) => {
-        res.json(result);
+        res.json({
+            code: 200,
+            success: true,
+            result
+        });
     }, (err) => {
         res.end(err);
     });
@@ -33,7 +37,11 @@ router.get('/get_lists/:page/:length', function(req, res) {
             })
     }, err => {
         res.end(err);
-    }).then(result => res.json(result));
+    }).then(result => res.json({
+        code: 200,
+        success: true,
+        result
+    }));
 
 });
 
@@ -54,7 +62,11 @@ router.get('/archives', function(req, res) {
                 })
             })
         }, new Promise(resolve => resolve())).then(() => {
-            res.json(article_lists);
+            res.json({
+                code: 200,
+                success: true,
+                result: article_lists
+            });
         });
     }, err => {
         res.end(err);

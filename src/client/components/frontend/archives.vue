@@ -23,28 +23,31 @@
     </section>
 </template>
 <script>
-import loading from '../loading';
+import loading from "../loading";
 export default {
-    components: {
-        loading
-    },
-    data() {
-        return {
-            article_list: [
-            ]
-        }
-    },
-    methods: {
-        get_archives() {
-            this.$http.get('/article/archives').then(result => {
-                this.article_list = result.data;
-            }, err => {
-
-            })
-        }
-    },
-    mounted() {
-        this.get_archives();
+  components: {
+    loading
+  },
+  data() {
+    return {
+      article_list: []
+    };
+  },
+  methods: {
+    get_archives() {
+      this.$http.get("/article/archives").then(
+        d => {
+          var data = d.data;
+          if (data.success) {
+            this.article_list = data.result;
+          }
+        },
+        err => {}
+      );
     }
-}
+  },
+  mounted() {
+    this.get_archives();
+  }
+};
 </script>

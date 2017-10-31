@@ -54,7 +54,7 @@ export default {
     }
   },
   watch: {
-      '$route': 'get_img_lists'
+    $route: "get_img_lists"
   },
   methods: {
     open_url(url) {
@@ -71,20 +71,24 @@ export default {
       var pageSize = this.pageSize;
       this.$http
         .get("/bing/get_img_lists/" + currentPage + "/" + this.pageSize)
-        .then(result => {
-          this.img_lists = result.data.img_list;
-          this.totalPage = result.data.totalPage;
+        .then(d => {
+          var data = d.data;
+          if (data.success) {
+            var result = data.result;
+            this.img_lists = result.img_list;
+            this.totalPage = result.totalPage;
 
-          //访问页面超出最大页数
-          if (currentPage > this.totalPage && this.totalPage) {
-            this.$router.push("/bing/" + this.totalPage + ".html");
-          }
-          if (!this.totalPage) {
-            this.haveNotImage = true;
-            return false;
-          }
+            //访问页面超出最大页数
+            if (currentPage > this.totalPage && this.totalPage) {
+              this.$router.push("/bing/" + this.totalPage + ".html");
+            }
+            if (!this.totalPage) {
+              this.haveNotImage = true;
+              return false;
+            }
 
-          this.show = true;
+            this.show = true;
+          }
         });
     }
   },

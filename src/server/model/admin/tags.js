@@ -1,8 +1,6 @@
 var query = require('../db');
 
-var Tags = function() {
-
-}
+var Tags = _ => {}
 
 module.exports = Tags;
 

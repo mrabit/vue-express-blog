@@ -1,7 +1,7 @@
 var query = require('../db');
 var util = require('util');
 
-var Article = function(params) {
+var Article = params => {
     this.id = params.id;
 }
 

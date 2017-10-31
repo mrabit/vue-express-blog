@@ -1,9 +1,7 @@
 var query = require('../db');
 var util = require('util');
 
-var ArticleTags = function() {
-
-}
+var ArticleTags = _ => {}
 
 
 ArticleTags.get_tags = function() {

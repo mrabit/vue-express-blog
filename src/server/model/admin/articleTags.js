@@ -1,8 +1,6 @@
 var query = require('../db');
 
-var Article_Tags = function() {
-
-}
+var Article_Tags = _ => {}
 
 Article_Tags.add_article_tags = function(article_id, tags_arr) {
     var sql = "INSERT INTO `tp_article_tags` (`article_id`,`tags_id`) VALUES ";

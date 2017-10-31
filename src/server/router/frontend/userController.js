@@ -1,16 +1,17 @@
-var ArticleTags = require('../../model/frontend/articleTags');
+var query = require('../../model/db');
 var express = require('express');
 var router = express.Router();
+var User = require('../../model/frontend/user');
 
-router.get('/', function(req, res) {
-    ArticleTags.get_tags().then(result => {
+router.get('/profile', (req, res) => {
+    User.get_profile('1').then(result => {
         res.json({
             code: 200,
             success: true,
             result
-        });
+        })
     }, err => {
-        res.send(err);
+        res.json(err);
     })
 })
 

@@ -1,7 +1,7 @@
 <style scoped>
 .paging {
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 15px;
 }
 </style>
 <template>
@@ -85,74 +85,80 @@
     </section>
 </template>
 <script>
-import loading from '../loading';
+import loading from "../loading";
 export default {
-    components: {
-        loading
+  components: {
+    loading
+  },
+  data() {
+    return {
+      article: {
+        id: 0,
+        title: "",
+        uname: "",
+        reprint_url: "",
+        content: "",
+        create_time: "",
+        release_time: "",
+        modify_time: "",
+        is_html: true
+      },
+      adjoin: [],
+      show: false
+    };
+  },
+  computed: {
+    location_href() {
+      return (
+        window.location.origin + "/details/" + this.$route.params.id + ".html"
+      );
     },
-    data() {
-        return {
-            article: {
-                id: 0,
-                title: '',
-                uname: '',
-                reprint_url: '',
-                content: '',
-                create_time: '',
-                release_time: '',
-                modify_time: '',
-                is_html: true
-            },
-            adjoin: [],
-            show: false
-        }
-    },
-    computed: {
-        location_href() {
-            return window.location.origin + '/details/' + this.$route.params.id + '.html';
-        },
-        is_html() {
-            return !!this.article.is_html;
-        }
-    },
-    watch: {
-        "$route": "get_article_details"
-    },
-    methods: {
-        get_article_details() {
-            this.$http.get('/article/get_details/' + this.$route.params.id).then(response => {
-                this.article = response.data.article[0];
-                this.adjoin = response.data.adjoin;
-                document.title = response.data.article[0].title;
-                this.$nextTick(() => {
-                    console.log('asd')
-                    editormd.markdownToHTML("editormd", {
-                        htmlDecode: "style,script,iframe",  // you can filter tags decode
-                        emoji: true,
-                        taskList: true,
-                        tex: true,  // 默认不解析
-                        flowChart: true,  // 默认不解析
-                        sequenceDiagram: true,  // 默认不解析
-                    });
-                    this.show = true;
-                    console.log(this.is_html)
-                })
-
-            });
-        },
-        unescape: function(html) {
-            return html
-                .replace(html ? /&(?!#?\w+;)/g : /&/g, '&amp;')
-                .replace(/&amp;/g, "&")
-                .replace(/&lt;/g, "<")
-                .replace(/&gt;/g, ">")
-                .replace(/&quot;/g, "\"")
-                .replace(/&#39;/g, "\'")
-                .replace(/&nbsp;/g, " ");
-        }
-    },
-    created() {
-        this.get_article_details();
+    is_html() {
+      return !!this.article.is_html;
     }
-}
+  },
+  watch: {
+    $route: "get_article_details"
+  },
+  methods: {
+    get_article_details() {
+      this.$http
+        .get("/article/get_details/" + this.$route.params.id)
+        .then(d => {
+          var data = d.data;
+          if (data.success) {
+            var result = data.result;
+            this.article = result.article[0];
+            this.adjoin = result.adjoin;
+            document.title = result.article[0].title + "一桶浆糊的博客";
+            this.$nextTick(() => {
+              editormd.markdownToHTML("editormd", {
+                htmlDecode: "style,script,iframe", // you can filter tags decode
+                emoji: true,
+                taskList: true,
+                tex: true, // 默认不解析
+                flowChart: true, // 默认不解析
+                sequenceDiagram: true // 默认不解析
+              });
+              this.show = true;
+              console.log(this.is_html);
+            });
+          }
+        });
+    },
+    unescape: function(html) {
+      return html
+        .replace(html ? /&(?!#?\w+;)/g : /&/g, "&amp;")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&nbsp;/g, " ");
+    }
+  },
+  created() {
+    this.get_article_details();
+  }
+};
 </script>

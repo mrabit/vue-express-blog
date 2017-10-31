@@ -41,7 +41,7 @@ export default {
       loading: true
     };
   },
-  mounted(){
+  mounted() {
     this.loading = false;
   }
 };

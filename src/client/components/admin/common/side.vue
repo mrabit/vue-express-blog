@@ -86,7 +86,7 @@
     </div>
 </template>
 <script>
-import moment from 'moment';
+import moment from "moment";
 export default {
   data() {
     return {
@@ -94,16 +94,16 @@ export default {
     };
   },
   filters: {
-      format_time(time){
-          return moment(time * 1000).format('YYYY-MM-DD HH:mm');
-      }
+    format_time(time) {
+      return moment(time * 1000).format("YYYY-MM-DD HH:mm");
+    }
   },
   computed: {
     user() {
-      return this.$store.getters.getUser;
+      return this.$store.getters["admin/getUser"];
     },
     isCollapse() {
-      var boolean = this.$store.getters.getIsCollapse;
+      var boolean = this.$store.getters["admin/getIsCollapse"];
       var body = document.body;
       if (body.clientWidth <= 768) {
         this.offScreen = boolean;

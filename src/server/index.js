@@ -10,6 +10,7 @@ app.use(require('./router/middleware'));
 app.use('/', require('./router/router'));
 
 // 前端接口路由
+app.use('/user', require('./router/frontend/userController'));
 app.use('/article', require('./router/frontend/articleController'));
 app.use('/article_tags', require('./router/frontend/articleTagsController'));
 app.use('/bing', require('./router/frontend/bingController'));

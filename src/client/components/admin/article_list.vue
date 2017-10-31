@@ -145,13 +145,16 @@ export default {
         url += this.formInline.params;
       }
       this.$http.get(url).then(d => {
-        var result = d.data;
-        for (var i in result.article_lists) {
-          result.article_lists[i]["visable"] = false;
+        var data = d.data;
+        if (data.success) {
+          var result = data.result;
+          for (var i in result.article_lists) {
+            result.article_lists[i]["visable"] = false;
+          }
+          this.tableData = result.article_lists;
+          this.total = result.count;
+          this.loading = false;
         }
-        this.tableData = result.article_lists;
-        this.total = result.count;
-        this.loading = false;
       });
     },
     onSubmit() {
@@ -179,8 +182,8 @@ export default {
     },
     handleDelete(row) {
       row.visable = false;
-      this.$http.post("/api/article/delete_article",{id: row.id}).then(result => {
-        if (result.data.code == "200") {
+      this.$http.post("/api/article/delete_article", { id: row.id }).then(d => {
+        if (d.data.success) {
           this.handleCurrentChange();
           this.$notify({
             title: "成功",

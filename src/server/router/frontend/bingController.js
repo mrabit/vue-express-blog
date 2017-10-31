@@ -5,24 +5,7 @@ var moment = require('moment');
 var request = require('request');
 var qiniu_model = require('../../model/qiniu');
 var qiniu_config = require('../../config')['qiniu'];
-
-
-var get_bing_json = (params) => {
-    var options = {
-        method: 'GET',
-        url: 'http://cn.bing.com/HPImageArchive.aspx',
-        headers: {
-            'Content-type': 'text/html; charset=utf-8'
-        },
-        qs: params
-    }
-    return new Promise((resolve, reject) => {
-        request(options, (err, response, body) => {
-            if (err) reject(err);
-            resolve(JSON.parse(body));
-        })
-    })
-}
+var common = require('../../common');
 
 router.get('/', function(req, res) {
     Bing.get_image_by_time(moment().format('YYYY-MM-DD')).then(result => {
@@ -63,7 +46,7 @@ router.get('/add_info', (req, res) => {
         }
     }, err => {
         res.json(err);
-    }).then(get_bing_json).then(bing_data => {
+    }).then(common.get_bing_json).then(bing_data => {
         //url地址
         var urlbase = 'http://s.cn.bing.net' + bing_data.images[0]['urlbase'];
         //简介
@@ -119,7 +102,11 @@ router.get('/add_info', (req, res) => {
     }).then(params => {
         Bing.insert_imgInfo(params).then(result => {
             params['id'] = result.insertId;
-            res.json(params);
+            res.json({
+                code: 200,
+                success: true,
+                result: params
+            });
         }, err => {
             res.json(err);
         })
@@ -159,7 +146,11 @@ router.get('/get_img_lists/:page/:length', function(req, res) {
     }, err => {
         res.end(err);
     }).then(result => {
-        res.json(result);
+        res.json({
+            code: 200,
+            success: true,
+            result
+        });
     })
 })
 

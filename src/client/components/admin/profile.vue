@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     user() {
-      return this.$store.getters.getUser;
+      return this.$store.getters['admin/getUser'];
     }
   },
   methods: {

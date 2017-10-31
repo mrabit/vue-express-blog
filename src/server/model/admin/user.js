@@ -1,8 +1,6 @@
 var query = require('../db');
 
-var User = function() {
-
-}
+var User = _ => {}
 
 User.login = (params) => {
     var sql = "select * from tp_user where uname = ? and upwd = ?";
@@ -40,6 +38,21 @@ User.edit_profile = (params) => {
             if (err) reject(err.message);
             resolve(result);
         });
+    })
+}
+
+User.update_login_time_by_id = (id, ip) => {
+    var sql = 'update tp_user set last_login_ip=?, last_login_time=? where id=?';
+    var map = [
+        ip,
+        Date.parse(new Date()) / 1000,
+        id
+    ]
+    return new Promise((resolve, reject) => {
+        query(sql, map, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        }, true);
     })
 }
 

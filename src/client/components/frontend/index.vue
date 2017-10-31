@@ -116,38 +116,42 @@ export default {
           )
         )
         .then(
-          result => {
-            this.article_lists = result.data.article_lists;
-            this.totalPage = result.data.totalPage;
-            //访问页面超出最大页数
-            if (currentPage > this.totalPage && this.totalPage) {
-              this.$router.push(
-                "/index/" +
-                  this.totalPage +
-                  ".html" +
-                  (this.tags_id ? "?tags_id=" + this.tags_id : "")
-              );
-            }
-            if (!this.totalPage) {
-              this.haveNotArticle = true;
-              return false;
-            }
-            this.$nextTick(() => {
-              var editormd_arr = document.getElementsByClassName(
-                "editormd_container"
-              );
-              for (var i = 0; i < editormd_arr.length; i++) {
-                var temp = editormd_arr[i];
-                editormd.markdownToHTML(temp["id"], {
-                  htmlDecode: "style,script,iframe", // you can filter tags decode
-                  emoji: true,
-                  taskList: true,
-                  tex: true, // 默认不解析
-                  flowChart: true, // 默认不解析
-                  sequenceDiagram: true // 默认不解析
-                });
+          d => {
+            var data = d.data;
+            if (data.success) {
+              var result = data.result;
+              this.article_lists = result.article_lists;
+              this.totalPage = result.totalPage;
+              //访问页面超出最大页数
+              if (currentPage > this.totalPage && this.totalPage) {
+                this.$router.push(
+                  "/index/" +
+                    this.totalPage +
+                    ".html" +
+                    (this.tags_id ? "?tags_id=" + this.tags_id : "")
+                );
               }
-            });
+              if (!this.totalPage) {
+                this.haveNotArticle = true;
+                return false;
+              }
+              this.$nextTick(() => {
+                var editormd_arr = document.getElementsByClassName(
+                  "editormd_container"
+                );
+                for (var i = 0; i < editormd_arr.length; i++) {
+                  var temp = editormd_arr[i];
+                  editormd.markdownToHTML(temp["id"], {
+                    htmlDecode: "style,script,iframe", // you can filter tags decode
+                    emoji: true,
+                    taskList: true,
+                    tex: true, // 默认不解析
+                    flowChart: true, // 默认不解析
+                    sequenceDiagram: true // 默认不解析
+                  });
+                }
+              });
+            }
           },
           err => {}
         );
@@ -163,7 +167,6 @@ export default {
         .replace(/&nbsp;/g, " ");
     },
     is_html(int) {
-      console.log(int);
       return !!int;
     }
   },
