@@ -52,7 +52,7 @@ User.update_login_time_by_id = (id, ip) => {
         query(sql, map, (err, result) => {
             if (err) reject(err);
             resolve(result);
-        }, true);
+        });
     })
 }
 
