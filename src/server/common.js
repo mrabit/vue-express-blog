@@ -6,6 +6,7 @@ module.exports = {
             req.connection.socket.remoteAddress;
     },
     get_bing_json: (params) => {
+        var request = require('request');
         var options = {
             method: 'GET',
             url: 'http://cn.bing.com/HPImageArchive.aspx',

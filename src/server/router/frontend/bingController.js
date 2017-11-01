@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var Bing = require('../../model/frontend/bing');
 var moment = require('moment');
-var request = require('request');
 var qiniu_model = require('../../model/qiniu');
 var qiniu_config = require('../../config')['qiniu'];
 var common = require('../../common');
@@ -33,7 +32,11 @@ router.get('/add_info', (req, res) => {
     Bing.get_image_by_time(time).then(result => {
         if (result.length > 0) {
             // 数据库已存在当前值,取出;
-            res.json(result[0]);
+            res.json({
+                code: 200,
+                success: true,
+                result: result[0]
+            });
             return Promise.reject({
                 notRealPromiseException: true,
             });
