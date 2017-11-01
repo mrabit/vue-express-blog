@@ -6,14 +6,10 @@
 
 var app = require('../index');
 var debug = require('debug')('express:server');
-var https = require('https');
+var http = require('http');
 var websocket = require('../websocket');
 var fs = require('fs');
 
-var options = {
-    key: fs.readFileSync(__dirname + '/blog.mrabit.com.key'),
-    cert: fs.readFileSync(__dirname + '/blog.mrabit.com.pem'),
-}
 /**
  * Get port from environment and store in Express.
  */
@@ -25,7 +21,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = https.createServer(options, app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
