@@ -55,7 +55,7 @@ router.post('/login', function (req, res) {
                 })
             }
             // 登录成功,踢出非当前token登录ip
-            websocket.broadcast(req.connection.remoteAddress, data.token);
+            websocket.broadcast(common.getClientIp(req), data.token);
 
             res.json({
                 success: true,

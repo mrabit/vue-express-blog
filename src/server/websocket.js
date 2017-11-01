@@ -1,4 +1,5 @@
 var websocket = require('ws');
+var common = require('./common');
 
 var wss;
 module.exports = {
@@ -9,8 +10,8 @@ module.exports = {
         });
 
         wss.on('connection', (ws, req) => {
-            console.log(req.connection.remoteAddress);
-            ws.ip = req.connection.remoteAddress;
+            console.log(common.getClientIp(req));
+            ws.ip = common.getClientIp(req);
             ws.on('message', (msg) => {
                 ws.token = msg;
             })
