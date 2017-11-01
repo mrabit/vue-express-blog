@@ -134,12 +134,9 @@ export default {
     // 存在token,构建websocket通讯
     if (token) {
       token = token.token;
+      var https = window.location.protocol == "https:";
       var ws = new WebSocket(
-        window.location.protocol == "https"
-          ? "wss"
-          : "ws" + "://blog.mrabit.com" + window.location.protocol == "https"
-            ? "/wss"
-            : ""
+        (https ? "wss" : "ws") + "://blog.mrabit.com" + (https ? "/wss" : "")
       );
       ws.onopen = function() {
         // 发送当前token到服务器,做校验
