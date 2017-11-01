@@ -87,6 +87,8 @@
 </template>
 <script>
 import moment from "moment";
+var WebStorageCache = require("web-storage-cache");
+var wsCache = new WebStorageCache();
 export default {
   data() {
     return {
@@ -126,6 +128,29 @@ export default {
       }
     }
   },
-  created() {}
+  mounted() {
+    // 获取token缓存;
+    var token = wsCache.get("token");
+    // 存在token,构建websocket通讯
+    if (token) {
+      token = token.token;
+      var ws = new WebSocket("ws://" + window.location.host);
+      ws.onopen = function() {
+        // 发送当前token到服务器,做校验
+        ws.send(token);
+      };
+      ws.onmessage = evt => {
+        // 接收消息
+        var data = JSON.parse(evt.data);
+        // 下线通知
+        if (data.code == 107) {
+          alert(data.message);
+          wsCache.delete("token");
+          this.$router.push("/admin/login.html");
+          ws.close();
+        }
+      };
+    }
+  }
 };
 </script>

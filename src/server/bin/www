@@ -7,6 +7,7 @@
 var app = require('../index');
 var debug = require('debug')('express:server');
 var http = require('http');
+var websocket = require('../websocket');
 
 /**
  * Get port from environment and store in Express.
@@ -28,7 +29,8 @@ var server = http.createServer(app);
 server.listen(port, '0.0.0.0');
 server.on('error', onError);
 server.on('listening', onListening);
-
+// 实例化websocket
+websocket.init(server);
 /**
  * Normalize a port into a number, string, or false.
  */

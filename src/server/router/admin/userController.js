@@ -7,8 +7,9 @@ var User = require('../../model/admin/user');
 var redis = require('../../model/redis_db');
 var exp = require('../../config')['redis']['exp'];
 var common = require('../../common');
+var websocket = require('../../websocket');
 
-router.post('/login', function(req, res) {
+router.post('/login', function (req, res) {
     var user = {
         uname: req.body.uname,
         upwd: md5(req.body.upwd)
@@ -24,13 +25,13 @@ router.post('/login', function(req, res) {
         } else {
             // 生成token
             var token = jwt.sign({
-                    uname: result.uname,
-                    upwd: result.upwd,
-                    id: result.id,
-                }, app.get('secret'), {
-                    expiresIn: exp
-                })
-                // 设置token到redis
+                uname: result.uname,
+                upwd: result.upwd,
+                id: result.id,
+            }, app.get('secret'), {
+                expiresIn: exp
+            })
+            // 设置token到redis
             return redis.set(req.body.uname, token).then(_ => {
                 // 设置redis值的过期时间
                 return redis.expire(req.body.uname, exp).then(_ => {
@@ -53,6 +54,9 @@ router.post('/login', function(req, res) {
                     message: '登录信息更新失败.'
                 })
             }
+            // 登录成功,踢出非当前token登录ip
+            websocket.broadcast(req.connection.remoteAddress, data.token);
+
             res.json({
                 success: true,
                 message: '登录成功.',
@@ -61,11 +65,12 @@ router.post('/login', function(req, res) {
             })
         })
     }).catch(err => {
+        console.log(err);
         res.json(err)
     })
 })
 
-router.post('/logout', function(req, res) {
+router.post('/logout', function (req, res) {
     var key = req.body.key;
     redis.del(key).then(result => {
         res.json({
@@ -101,7 +106,7 @@ router.post('/edit_profile', (req, res) => {
     })
 })
 
-router.post('/check_token', function(req, res) {
+router.post('/check_token', function (req, res) {
     res.json({
         success: true,
         code: 200

@@ -6,5 +6,9 @@
     </div>
 </template>
 <script>
-export default {};
+export default {
+  mounted() {
+    this.$http.post("/api/check_token");
+  }
+};
 </script>

@@ -22,8 +22,9 @@ var wsCache = new webStorageCache();
 
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title + ' - 一桶浆糊的博客';
+    var user = wsCache.get('token');
     // 登录页, 存在登录信息, 调用接口判断token生效则跳转后台首页
-    if (to.meta.login && wsCache.get('token')) {
+    if (to.meta.login && user) {
         axios.post('/api/check_token').then(result => {
             nProgress.start();
             return next('/admin/index.html');
@@ -32,7 +33,6 @@ router.beforeEach((to, from, next) => {
 
     // 是否需要认证权限
     if (to.meta.requireAuth) {
-        var user = wsCache.get('token');
         // 不存在token信息,跳转登录页
         if (!user) {
             return next('/admin/login.html')
