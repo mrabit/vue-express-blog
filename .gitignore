@@ -2,4 +2,4 @@ node_modules
 npm-debug.log
 .vscode
 .DS_Store
-./src/server/public/Uploads/
+src/server/public/Uploads
