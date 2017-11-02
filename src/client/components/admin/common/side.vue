@@ -80,6 +80,8 @@
                 </template>
                 <el-menu-item-group>
                     <el-menu-item index="/admin/profile.html">修改资料</el-menu-item>
+                    <el-menu-item index="/admin/edit_about.html">修改关于</el-menu-item>
+                    <el-menu-item index="/admin/passwd.html">修改密码</el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
         </el-menu>
@@ -134,9 +136,10 @@ export default {
     // 存在token,构建websocket通讯
     if (token) {
       token = token.token;
+      // 生产环境使用https,则websocket需要使用wss
       var https = window.location.protocol == "https:";
       var ws = new WebSocket(
-        (https ? "wss" : "ws") + "://blog.mrabit.com" + (https ? "/wss" : "")
+        https ? "wss://blog.mrabit.com/ss" : "ws://" + window.location.host
       );
       ws.onopen = function() {
         // 发送当前token到服务器,做校验

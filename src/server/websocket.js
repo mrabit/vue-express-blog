@@ -8,7 +8,6 @@ module.exports = {
         wss = new websocket.Server({
             server
         });
-
         wss.on('connection', (ws, req) => {
             console.log(common.getClientIp(req));
             ws.ip = common.getClientIp(req);

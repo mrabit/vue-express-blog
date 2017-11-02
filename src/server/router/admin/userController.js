@@ -9,7 +9,7 @@ var exp = require('../../config')['redis']['exp'];
 var common = require('../../common');
 var websocket = require('../../websocket');
 
-router.post('/login', function (req, res) {
+router.post('/login', (req, res) => {
     var user = {
         uname: req.body.uname,
         upwd: md5(req.body.upwd)
@@ -25,13 +25,13 @@ router.post('/login', function (req, res) {
         } else {
             // 生成token
             var token = jwt.sign({
-                uname: result.uname,
-                upwd: result.upwd,
-                id: result.id,
-            }, app.get('secret'), {
-                expiresIn: exp
-            })
-            // 设置token到redis
+                    uname: result.uname,
+                    upwd: result.upwd,
+                    id: result.id,
+                }, app.get('secret'), {
+                    expiresIn: exp
+                })
+                // 设置token到redis
             return redis.set(req.body.uname, token).then(_ => {
                 // 设置redis值的过期时间
                 return redis.expire(req.body.uname, exp).then(_ => {
@@ -70,7 +70,7 @@ router.post('/login', function (req, res) {
     })
 })
 
-router.post('/logout', function (req, res) {
+router.post('/logout', (req, res) => {
     var key = req.body.key;
     redis.del(key).then(result => {
         res.json({
@@ -82,7 +82,7 @@ router.post('/logout', function (req, res) {
     })
 })
 
-router.get('/profile', (req, res) => {
+router.get('/user/profile', (req, res) => {
     User.get_profile_by_id(req.query.id).then(result => {
         res.json({
             success: true,
@@ -94,7 +94,7 @@ router.get('/profile', (req, res) => {
     })
 })
 
-router.post('/edit_profile', (req, res) => {
+router.post('/user/edit_profile', (req, res) => {
     User.edit_profile(req.body).then(result => {
         res.json({
             success: true,
@@ -106,7 +106,56 @@ router.post('/edit_profile', (req, res) => {
     })
 })
 
-router.post('/check_token', function (req, res) {
+router.get('/user/about', (req, res) => {
+    User.get_about_by_id().then(result => {
+        res.json({
+            code: 200,
+            success: true,
+            result
+        });
+    }, err => res.end(err));
+})
+
+router.post('/user/edit_about', (req, res) => {
+    var about = req.body.about;
+    User.edit_about(about).then(result => {
+        console.log(result);
+        res.json({
+            code: 200,
+            success: true,
+            result
+        })
+    }, err => {
+        res.end(err);
+    })
+})
+
+router.post('/user/changePasswd', (req, res) => {
+    var params = {
+        oldPasswd: md5(req.body.oldPasswd || ''),
+        newPasswd: md5(req.body.newPasswd || '')
+    }
+    User.change_passwd(params).then(result => {
+        if (result.changedRows) {
+            res.json({
+                code: 200,
+                success: true,
+                result
+            })
+        } else {
+            res.json({
+                code: 108,
+                success: false,
+                message: '旧密码错误,请重新输入.'
+            })
+        }
+
+    }, err => {
+        res.end(err);
+    })
+})
+
+router.post('/check_token', (req, res) => {
     res.json({
         success: true,
         code: 200

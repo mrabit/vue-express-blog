@@ -87,6 +87,17 @@ export default new Router({
         meta: {
             title: 'bing每日一图'
         }
+    }, {
+        path: '/about.html',
+        name: 'about',
+        components: {
+            default: (resolve) => void(require(['../components/frontend/about.vue'], resolve)),
+            side: (resolve) => void(require(['../components/frontend/common/side.vue'], resolve)),
+            footer: (resolve) => void(require(['../components/frontend/common/footer.vue'], resolve))
+        },
+        meta: {
+            title: '关于'
+        }
     }, admin, {
         path: '*',
         components: {

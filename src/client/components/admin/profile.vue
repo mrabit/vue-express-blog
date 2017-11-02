@@ -80,7 +80,7 @@ export default {
   },
   methods: {
     get_profile() {
-      this.$http.get("/api/profile?id=" + this.user.id).then(
+      this.$http.get("/api/user/profile?id=" + this.user.id).then(
         d => {
           if (d.data.success) {
             var result = d.data.result;
@@ -106,7 +106,7 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$http.post("/api/edit_profile", this.profile).then(
+          this.$http.post("/api/user/edit_profile", this.profile).then(
             result => {
               if (result.data.success) {
                 this.$notify({

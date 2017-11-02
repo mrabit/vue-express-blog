@@ -8,7 +8,7 @@
 }
 </style>
 <template>
-    <section class="content" v-cloak>
+    <section class="content">
         <div class="wrapper">
             <section class="row padder m-b-n-sm">
                 <div id="view" class="clearfix">
@@ -98,6 +98,7 @@ export default {
   },
   methods: {
     get_lists() {
+      this.article_lists = [];
       var currentPage = this.currentPage;
       var pageSize = this.pageSize;
       //访问页面小于1
@@ -139,6 +140,7 @@ export default {
                 var editormd_arr = document.getElementsByClassName(
                   "editormd_container"
                 );
+                
                 for (var i = 0; i < editormd_arr.length; i++) {
                   var temp = editormd_arr[i];
                   editormd.markdownToHTML(temp["id"], {

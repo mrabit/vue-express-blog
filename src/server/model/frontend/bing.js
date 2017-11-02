@@ -38,7 +38,7 @@ Bing.insert_imgInfo = function(params) {
 
 Bing.get_img_lists = function(params) {
     params['start'] = (params.page - 1) * params.length;
-    var sql = "SELECT id, img_url, img_time, img_title from tp_bing ORDER BY img_time desc LIMIT ?,?";
+    var sql = "SELECT id, img_url, img_url_480, img_time, img_title from tp_bing ORDER BY img_time desc LIMIT ?,?";
     return new Promise((resolve, reject) => {
         query(sql, [params.start, params.length], function(err, result) {
             if (err) reject(err.message)

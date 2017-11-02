@@ -80,6 +80,28 @@ export default {
             header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
         }
     }, {
+        path: 'edit_about.html',
+        meta: {
+            title: '修改关于',
+            requireAuth: true
+        },
+        components: {
+            default: (resolve) => void(require(['../components/admin/edit_about.vue'], resolve)),
+            side: (resolve) => void(require(['../components/admin/common/side.vue'], resolve)),
+            header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
+        }
+    }, {
+        path: 'passwd.html',
+        meta: {
+            title: '修改密码',
+            requireAuth: true
+        },
+        components: {
+            default: (resolve) => void(require(['../components/admin/passwd.vue'], resolve)),
+            side: (resolve) => void(require(['../components/admin/common/side.vue'], resolve)),
+            header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
+        }
+    }, {
         path: '/admin/*',
         components: {
             default: NotFoundComponent,
