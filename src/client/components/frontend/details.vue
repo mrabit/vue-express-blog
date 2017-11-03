@@ -8,8 +8,8 @@
     <section class="content">
         <div class="wrapper">
             <section class="row padder">
-                <loading :show="!show"></loading>
-                <article class="col-xs-12" v-show="show">
+                <loading :show="loading"></loading>
+                <article class="col-xs-12" v-if="!loading">
                     <div class="row verticalCenter no-gutter">
                         <div class="col-xs-12 col-sm-8 text-left">
                             <p class="article-title h2">{{ article.title }}</p>
@@ -21,10 +21,10 @@
                                 <time :datetime="article.create_time">{{ article.release_time }}</time>
                             </div>
                             <!-- <div class="meta">
-                                                                                                    <small class="text-muted">
-                                                                                                        <span id="changyan_count_unit"></span> Comments</small>
-                                                                                                    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
-                                                                                                </div> -->
+                                <small class="text-muted">
+                                    <span id="changyan_count_unit"></span> Comments</small>
+                                <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+                            </div> -->
                         </div>
                     </div>
                     <div class="row">
@@ -104,7 +104,7 @@ export default {
         is_html: true
       },
       adjoin: [],
-      show: false
+      loading: true
     };
   },
   computed: {
@@ -122,6 +122,7 @@ export default {
   },
   methods: {
     get_article_details() {
+      this.loading = true;
       this.$http
         .get("/article/get_details/" + this.$route.params.id)
         .then(d => {
@@ -131,6 +132,7 @@ export default {
             this.article = result.article[0];
             this.adjoin = result.adjoin;
             document.title = result.article[0].title + "一桶浆糊的博客";
+            this.loading = false;
             this.$nextTick(() => {
               editormd.markdownToHTML("editormd", {
                 htmlDecode: "style,script,iframe", // you can filter tags decode
@@ -140,8 +142,6 @@ export default {
                 flowChart: true, // 默认不解析
                 sequenceDiagram: true // 默认不解析
               });
-              this.show = true;
-              console.log(this.is_html);
             });
           }
         });

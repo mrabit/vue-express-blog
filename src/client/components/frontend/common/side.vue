@@ -3,7 +3,7 @@
         <nav id="sidebar" class="behavior_1">
             <div class="text-center m-t-lg profile ">
                 <a href="#" class="block">
-                    <img src="https://blog.ssliuq.com/Uploads/Picture/2017-06-06/59369fb016efa.png" class="thumb-lg avatar image_logo" alt="">
+                    <img :src="user.user_header_img" class="thumb-lg avatar image_logo" alt="">
                 </a>
                 <span class="m-t-md block h4 sidebar_title hidden-sm hidden-xs">{{ user.blog_name }}的博客</span>
             </div>
@@ -27,7 +27,7 @@
                 <i class="fa fa-align-justify"></i>
             </div>
             <p class="text-center text-lg header_title m-b-none">{{ user.blog_name }}的博客</p>
-            <a href="#" class="me"><img src="https://blog.ssliuq.com/Uploads/Picture/2017-06-06/59369fb016efa.png" class=" avatar " alt=""></a>
+            <a href="#" class="me"><img :src="user.user_header_img" class=" avatar " alt=""></a>
         </header>
         <div id="sidebar-mask"></div>
     </div>

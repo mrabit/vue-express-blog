@@ -11,7 +11,7 @@
                     <el-col :span="14" :offset="5">
                         <el-form :rules="rules" ref="profile" :model="profile" label-width="160px">
                             <el-form-item label="输入用户名：" prop="uname">
-                                <el-input v-model="profile.uname"></el-input>
+                                <el-input disabled="disabled" v-model="profile.uname"></el-input>
                             </el-form-item>
                             <el-form-item label="输入博客名称：" prop="blog_name">
                                 <el-input v-model="profile.blog_name"></el-input>

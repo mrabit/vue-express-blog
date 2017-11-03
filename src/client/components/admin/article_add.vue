@@ -153,7 +153,7 @@ export default {
     },
     // 获取数据库中标签数据
     get_all_tags() {
-      this.$http.get("/api/tags/get_all_tags").then(d => {
+      return this.$http.get("/api/tags/get_all_tags").then(d => {
         var data = d.data;
         if (data.success) {
           var aaData = data.result;
@@ -238,61 +238,62 @@ export default {
           this.$router.push("/admin/article_list.html");
           return false;
         }
-        editormd.toolbarModes.full = [
-          "undo",
-          "redo",
-          "|",
-          "bold",
-          "del",
-          "italic",
-          "quote",
-          "ucwords",
-          "uppercase",
-          "lowercase",
-          "|",
-          "h1",
-          "h2",
-          "h3",
-          "h4",
-          "h5",
-          "h6",
-          "|",
-          "list-ul",
-          "list-ol",
-          "hr",
-          "|",
-          "link",
-          "reference-link",
-          "image",
-          "code",
-          "preformatted-text",
-          "code-block",
-          "table",
-          "datetime",
-          "emoji",
-          "html-entities",
-          "pagebreak",
-          "|",
-          "goto-line",
-          "watch",
-          "preview",
-          "clear",
-          "search",
-          "|",
-          "help"
-        ];
 
-        this.markdown = editormd("editormd", {
-          width: "90%",
-          height: 640,
-          syncScrolling: "single",
-          path: "/static/js/editormd/lib/",
-          imageUpload: true,
-          imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-          imageUploadURL: "/upload/local_base64"
+        this.get_all_tags().then(_ => {
+          editormd.toolbarModes.full = [
+            "undo",
+            "redo",
+            "|",
+            "bold",
+            "del",
+            "italic",
+            "quote",
+            "ucwords",
+            "uppercase",
+            "lowercase",
+            "|",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "|",
+            "list-ul",
+            "list-ol",
+            "hr",
+            "|",
+            "link",
+            "reference-link",
+            "image",
+            "code",
+            "preformatted-text",
+            "code-block",
+            "table",
+            "datetime",
+            "emoji",
+            "html-entities",
+            "pagebreak",
+            "|",
+            "goto-line",
+            "watch",
+            "preview",
+            "clear",
+            "search",
+            "|",
+            "help"
+          ];
+
+          this.markdown = editormd("editormd", {
+            width: "90%",
+            height: 640,
+            syncScrolling: "single",
+            path: "/static/js/editormd/lib/",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/upload/local_base64"
+          });
         });
-
-        this.get_all_tags();
       });
     }
   },

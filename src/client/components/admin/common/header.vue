@@ -35,13 +35,13 @@
             <!-- / buttons -->
 
             <!-- link and dropdown -->
-            <el-dropdown class="nav navbar-nav hidden-xs w-xxs text-center" placement="bottom-end" style="line-height: 50px">
+            <el-dropdown class="nav navbar-nav hidden-xs w-xxs text-center" @command="routerPush" placement="bottom-end" style="line-height: 50px">
               <span class="el-dropdown-link verticalCenter">
                 <span class="hidden-sm hidden-md">New</span>
                 <b class="caret"></b>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>新文章</el-dropdown-item>
+                <el-dropdown-item command="/admin/article_add.html">新文章</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <!-- / link and dropdown -->
@@ -111,6 +111,9 @@ export default {
             console.log(err);
           }
         );
+    },
+    routerPush(url){
+      this.$router.push(url);
     }
   },
   created() {
