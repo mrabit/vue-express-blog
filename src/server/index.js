@@ -19,6 +19,7 @@ app.use('/bing', require('./router/frontend/bingController'));
 app.use('/api', require('./router/admin/userController'));
 
 // 后台接口路由
+app.use('/api/wx', require('./router/admin/wxAuthController'));
 app.use('/api/article', require('./router/admin/articleController'));
 app.use('/api/tags', require('./router/admin/tagsController'));
 
