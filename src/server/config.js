@@ -19,5 +19,5 @@ module.exports = {
         auth_pass: '519296987',
         exp: 60 * 60
     },
-    domain: 'http://192.168.0.100:8088'
+    domain: 'https://blog.mrabit.com'
 }

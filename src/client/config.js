@@ -1,3 +1,3 @@
 module.exports = {
-    socket: 'ws://192.168.0.100:8088'
+    socket: 'wss://blog.mrabit.com/wss'
 }
