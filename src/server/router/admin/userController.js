@@ -47,8 +47,9 @@ router.post('/login', (req, res) => {
         res.json(err);
     }).then(data => {
         // 更新登录状态时间
-        console.log(common.getClientIp(req));
-        return User.update_login_time_by_id(data.result.id, common.getClientIp(req)).then(status => {
+        // websocket模拟请求可能会带上服务器的ip 用,分割
+        var ip = common.getClientIp(req).split(',')[0];
+        return User.update_login_time_by_id(data.result.id, ip).then(status => {
             if (status.changeRows < 1) {
                 return Promise.reject({
                     code: 106,
@@ -57,7 +58,7 @@ router.post('/login', (req, res) => {
                 })
             }
             // 登录成功,踢出非当前token登录ip
-            websocket.broadcast(common.getClientIp(req), data.token);
+            websocket.broadcast(ip, data.token);
 
             res.json({
                 code: 200,
