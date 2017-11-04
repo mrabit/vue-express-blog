@@ -102,6 +102,17 @@ export default {
             header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
         }
     }, {
+        path: 'wx_auth.html',
+        meta: {
+            title: '微信权限',
+            requireAuth: true
+        },
+        components: {
+            default: (resolve) => void(require(['../components/admin/wx_auth.vue'], resolve)),
+            side: (resolve) => void(require(['../components/admin/common/side.vue'], resolve)),
+            header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
+        }
+    }, {
         path: '/admin/*',
         components: {
             default: NotFoundComponent,

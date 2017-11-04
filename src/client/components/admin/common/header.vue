@@ -102,10 +102,8 @@ export default {
         .then(
           result => {
             wsCache.delete("token");
-            this.$store.commit("admin/changeUser", {});
-            this.$router.replace({
-              path: "/admin/login.html"
-            });
+            // this.$store.commit("admin/changeUser", {});
+            window.location.href = '/admin/login.html';
           },
           err => {
             console.log(err);

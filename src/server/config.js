@@ -18,5 +18,6 @@ module.exports = {
         port: 6379,
         auth_pass: '519296987',
         exp: 60 * 60
-    }
+    },
+    domain: 'http://192.168.0.100:8088'
 }

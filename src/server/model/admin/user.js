@@ -22,6 +22,16 @@ User.get_profile_by_id = (id = 1) => {
     })
 }
 
+User.get_passwd_by_id = (id = 1) => {
+    var sql = "select upwd from tp_user where id = ?";
+    return new Promise((resolve, reject) => {
+        query(sql, id, (err, result) => {
+            if (err) reject(err);
+            resolve(result.length > 0 ? result[0] : {});
+        })
+    })
+}
+
 User.edit_profile = (params) => {
     var sql = "update tp_user set uname=?,blog_name=?,weibo=?,github=?,twitter=?,user_header_img=? where id=?";
     var map = [
@@ -34,7 +44,7 @@ User.edit_profile = (params) => {
         params.id
     ]
     return new Promise((resolve, reject) => {
-        query(sql, map, function(err, result) {
+        query(sql, map, function (err, result) {
             if (err) reject(err.message);
             resolve(result);
         });

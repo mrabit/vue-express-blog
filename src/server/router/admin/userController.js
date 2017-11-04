@@ -10,9 +10,10 @@ var common = require('../../common');
 var websocket = require('../../websocket');
 
 router.post('/login', (req, res) => {
+    // 密码用前台md5加密发送过来,因为可能会用二维码扫码登录
     var user = {
         uname: req.body.uname,
-        upwd: md5(req.body.upwd)
+        upwd: req.body.upwd
     }
     User.login(user).then(result => {
         // 登录失败
@@ -25,13 +26,13 @@ router.post('/login', (req, res) => {
         } else {
             // 生成token
             var token = jwt.sign({
-                    uname: result.uname,
-                    upwd: result.upwd,
-                    id: result.id,
-                }, app.get('secret'), {
-                    expiresIn: exp
-                })
-                // 设置token到redis
+                uname: result.uname,
+                upwd: result.upwd,
+                id: result.id,
+            }, app.get('secret'), {
+                expiresIn: exp
+            })
+            // 设置token到redis
             return redis.set(req.body.uname, token).then(_ => {
                 // 设置redis值的过期时间
                 return redis.expire(req.body.uname, exp).then(_ => {
@@ -58,6 +59,7 @@ router.post('/login', (req, res) => {
             websocket.broadcast(common.getClientIp(req), data.token);
 
             res.json({
+                code: 200,
                 success: true,
                 message: '登录成功.',
                 token: data.token,

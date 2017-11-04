@@ -9,24 +9,6 @@ var exp = require('../../config')['redis']['exp'];
 var common = require('../../common');
 var websocket = require('../../websocket');
 
-var get_data = (url, params) => {
-    var request = require('request');
-    var options = {
-        method: 'GET',
-        url: url,
-        headers: {
-            'Content-type': 'text/html; charset=utf-8'
-        },
-        qs: params
-    }
-    return new Promise((resolve, reject) => {
-        request(options, (err, response, body) => {
-            if (err) reject(err);
-            resolve(JSON.parse(body));
-        })
-    })
-
-}
 
 router.get('/jsoncode2session', (req, res) => {
     var js_code = req.query.js_code;
@@ -39,7 +21,7 @@ router.get('/jsoncode2session', (req, res) => {
         js_code,
         grant_type
     };
-    get_data('https://api.weixin.qq.com/sns/jscode2session', params).then(result => {
+    common.get_request('https://api.weixin.qq.com/sns/jscode2session', params).then(result => {
         res.json(result);
     }, err => {
         res.end(err);
@@ -76,7 +58,7 @@ router.get('/getLocation', (req, res) => {
         radius: '1000',
         extensions: 'all'
     }
-    get_data('http://restapi.amap.com/v3/geocode/regeo', params).then(result => {
+    common.get_request('http://restapi.amap.com/v3/geocode/regeo', params).then(result => {
         res.json(result);
     }, err => {
         res.end(err);

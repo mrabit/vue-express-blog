@@ -1,3 +1,5 @@
+var request = require('request');
+
 module.exports = {
     getClientIp: (req) => {
         return req.headers['x-forwarded-for'] ||
@@ -5,11 +7,10 @@ module.exports = {
             req.socket.remoteAddress ||
             req.connection.socket.remoteAddress;
     },
-    get_bing_json: (params) => {
-        var request = require('request');
+    get_request: (url, params) => {
         var options = {
             method: 'GET',
-            url: 'http://cn.bing.com/HPImageArchive.aspx',
+            url: url,
             headers: {
                 'Content-type': 'text/html; charset=utf-8'
             },
@@ -18,7 +19,24 @@ module.exports = {
         return new Promise((resolve, reject) => {
             request(options, (err, response, body) => {
                 if (err) reject(err);
-                resolve(JSON.parse(body));
+                resolve(typeof body == 'object' ? body : JSON.parse(body));
+            })
+        })
+    },
+    post_request: (url, params) => {
+        var options = {
+            url: url,
+            method: "POST",
+            json: true,
+            headers: {
+                "content-type": "application/json",
+            },
+            body: params
+        };
+        return new Promise((resolve, reject) => {
+            request(options, (err, response, body) => {
+                if (err) reject(err);
+                resolve(typeof body == 'object' ? body : JSON.parse(body));
             })
         })
     }
