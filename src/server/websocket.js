@@ -56,7 +56,7 @@ var prototype = {
                         return common.post_request(domain + '/api/login', {
                             uname: 'admin',
                             upwd
-                        })
+                        }, ws.ip);
                     }).then(result => {
                         client.send(JSON.stringify(result));
                         ws.send('登录成功.')
@@ -86,7 +86,7 @@ module.exports = {
             ws.key = req.headers['sec-websocket-key'];
             ws.type = socket_type[req.url];
             ws.ip = common.getClientIp(req);
-
+            
             console.log('connected:', wss.clients.size);
             console.log('type:', ws.type);
 

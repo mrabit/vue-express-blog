@@ -23,7 +23,7 @@ module.exports = {
             })
         })
     },
-    post_request: (url, params) => {
+    post_request: (url, params, ip) => {
         var options = {
             url: url,
             method: "POST",
@@ -33,6 +33,9 @@ module.exports = {
             },
             body: params
         };
+        if (ip) {
+            options.headers['X-Forwarded-For'] = ip;
+        }
         return new Promise((resolve, reject) => {
             request(options, (err, response, body) => {
                 if (err) reject(err);
