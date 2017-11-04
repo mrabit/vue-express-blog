@@ -47,6 +47,7 @@ router.post('/login', (req, res) => {
         res.json(err);
     }).then(data => {
         // 更新登录状态时间
+        console.log(common.getClientIp(req));
         return User.update_login_time_by_id(data.result.id, common.getClientIp(req)).then(status => {
             if (status.changeRows < 1) {
                 return Promise.reject({

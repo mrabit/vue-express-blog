@@ -86,7 +86,7 @@ module.exports = {
             ws.key = req.headers['sec-websocket-key'];
             ws.type = socket_type[req.url];
             ws.ip = common.getClientIp(req);
-            
+            console.log(ws.ip);
             console.log('connected:', wss.clients.size);
             console.log('type:', ws.type);
 
