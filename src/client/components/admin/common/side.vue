@@ -2,10 +2,6 @@
 .bg-dark {
   background-color: #324157;
 }
-
-.el-menu--collapse {
-  width: 60px;
-}
 </style>
 
 <template>
@@ -17,7 +13,7 @@
                         <img :src="user.user_header_img" class="img-full" alt="...">
                     </span>
                 </div>
-                <div class=" hidden-folded">
+                <div class="hidden-folded">
                     <span class="clear">
                         <span class="block m-t-sm">
                             <strong class="font-bold text-lt">{{ user.uname }}</strong>
@@ -48,7 +44,11 @@
             </div>
             <div class="line dk hidden-folded"></div>
         </div>
-        <el-menu theme="dark" :default-active="$route.path" class="el-menu-vertical-demo" @select="select_menu" :collapse="isCollapse" :unique-opened="true" :router="true">
+        <el-menu :default-active="$route.path" class="el-menu-vertical-demo"
+            @select="select_menu" :collapse="isCollapse" :unique-opened="true" :router="true"
+            background-color="#324157"
+            text-color="#a6a8b1"
+            active-text-color="#20a0ff">
             <el-menu-item index="/admin/index.html">
                 <i class="el-icon-menu"></i>
                 <span slot="title">首页</span>

@@ -47,15 +47,16 @@
                         </el-pagination>
                     </div>
                     <el-dialog
-                        title="新增"
+                        :title="!formData.id?'新增':'修改'"
+                        :lock-scroll="false"
                         :visible.sync="dialogVisible"
-                        :close="dialogClose"
-                        width="20%">
+                        @close="dialogClose"
+                        width="50%">
                         <el-row>
                             <el-col :span="18" :offset="3">
                                 <el-form :model="formData" :rules="formData_rule" ref="formData"
                                  label-width="100px" label-position="right">
-                                    <el-form-item label="ID：" v-if="formData.id" prop="ID">
+                                    <el-form-item label="ID：" v-if="formData.id" prop="id">
                                         <el-input v-model="formData.id" disabled="disabled"></el-input>
                                     </el-form-item>
                                     <el-form-item label="OPEN_ID：" prop="OPEN_ID">
@@ -65,7 +66,7 @@
                                         <el-input v-model="formData.nick_name"></el-input>
                                     </el-form-item>
                                     <el-form-item class="pull-right m-b-none">
-                                        <el-button type="primary" @click="handleSubmit('formData')">立即新增</el-button>
+                                        <el-button type="primary" @click="handleSubmit('formData')">立即{{!formData.id?'新增':'修改'}}</el-button>
                                         <el-button @click="dialogVisible = false">取消</el-button>
                                     </el-form-item>
                                 </el-form>
@@ -101,7 +102,7 @@ export default {
       dialogVisible: false,
       pagination: {
         currentPage: 1,
-        pageSize: 2,
+        pageSize: 10,
         total: 0
       }
     };
@@ -124,12 +125,16 @@ export default {
     handleSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          debugger;
-          this.$http.post("/api/wx/addAuth", this.formData).then(result => {
+          var url = "/api/wx/addAuth";
+          if (this.formData.id) {
+            url = "/api/wx/updateAuth";
+          }
+          this.$http.post(url, this.formData).then(result => {
             this.$notify({
               title: "成功",
-              message: "新增用户成功!",
-              type: "success"
+              message: (!this.formData.id ? "新增" : "修改") + "用户成功!",
+              type: "success",
+              position: "bottom-right"
             });
             this.dialogVisible = false;
             this.getAuthList();
@@ -145,7 +150,8 @@ export default {
         this.$notify({
           title: "成功",
           message: "删除用户成功!",
-          type: "success"
+          type: "success",
+          position: "bottom-right"
         });
         this.getAuthList(this.pagination.currentPage);
       });
@@ -162,8 +168,11 @@ export default {
       this.dialogVisible = true;
     },
     dialogClose() {
-      debugger;
-      this.$refs["formData"].resetFields();
+      this.formData = {
+        id: 0,
+        OPEN_ID: "",
+        nick_name: ""
+      };
     }
   },
   mounted() {

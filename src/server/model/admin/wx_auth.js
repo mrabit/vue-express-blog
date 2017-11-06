@@ -34,7 +34,7 @@ module.exports = {
         })
     },
     getAuthDetails(id) {
-        var sql = 'select * from tp_wx where id=?';
+        var sql = 'select id, OPEN_ID, nick_name from tp_wx where id=?';
         return new Promise((resolve, reject) => {
             query(sql, id, (err, result) => {
                 if (err) reject(err);
@@ -64,6 +64,20 @@ module.exports = {
                 if (err) reject(err);
                 resolve(result);
             })
+        })
+    },
+    updateAuth(params) {
+        var sql = 'update tp_wx set OPEN_ID=?, nick_name =? where id=?';
+        var map = [
+            params.OPEN_ID,
+            params.nick_name,
+            params.id
+        ]
+        return new Promise((resolve, reject) => {
+            query(sql, map, (err, result) => {
+                if (err) reject(err);
+                resolve(result);
+            }, true)
         })
     }
 }

@@ -89,16 +89,48 @@
             }
         }
     }
-}
-
+} // dropdown最小宽度
 .el-dropdown-menu__item {
     min-width: 160px;
-}
-
+} // dropdown鼠标移上
 .el-dropdown {
     cursor: pointer;
     &:hover,
     &:focus {
         background-color: rgba(17, 7, 7, 0.05);
+    }
+} // side默认宽度
+.el-submenu,
+.el-menu-item {
+    width: 200px;
+}
+
+
+/* side收缩时宽度 */
+
+.app-aside-folded {
+    .el-submenu {
+        width: 60px;
+    }
+}
+
+.el-menu--collapse,
+.el-menu--collapse .el-menu-item {
+    width: 60px;
+} // side背景颜色
+.el-submenu .el-menu,
+.el-submenu .el-menu-item {
+    background-color: #1f2d3d!important;
+}
+
+.el-submenu .el-menu-item:hover {
+    background-color: #48576a!important;
+}
+
+.el-table {
+    td,
+    th {
+        height: 40px;
+        padding: 0 5px!important;
     }
 }

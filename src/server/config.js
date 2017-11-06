@@ -21,4 +21,5 @@ module.exports = {
     },
     domain: 'https://blog.mrabit.com',
     // domain: 'http://192.168.0.100:8088',
+    location: '111cd711282bda0bf4b1c2d3e7d2cf13'
 }

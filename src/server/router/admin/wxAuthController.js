@@ -8,6 +8,7 @@ var redis = require('../../model/redis_db');
 var exp = require('../../config')['redis']['exp'];
 var common = require('../../common');
 var websocket = require('../../websocket');
+var location_key = require('../../config')['location'];
 
 
 router.get('/jsoncode2session', (req, res) => {
@@ -54,7 +55,7 @@ router.get('/getLocation', (req, res) => {
     var longitude = req.query.longitude;
     var params = {
         location: longitude + ',' + latitude,
-        key: '111cd711282bda0bf4b1c2d3e7d2cf13',
+        key: location_key,
         radius: '1000',
         extensions: 'all'
     }
@@ -118,6 +119,21 @@ router.get('/getAuthDetails/:id', (req, res) => {
             success: true,
             result
         })
+    }, err => res.end(err));
+})
+
+router.post('/updateAuth', (req, res) => {
+    var params = {
+        OPEN_ID: req.body.OPEN_ID,
+        nick_name: req.body.nick_name,
+        id: req.body.id
+    };
+    wx_auth.updateAuth(params).then(result => {
+        res.json({
+            code: 200,
+            success: true,
+            result
+        });
     }, err => res.end(err));
 })
 

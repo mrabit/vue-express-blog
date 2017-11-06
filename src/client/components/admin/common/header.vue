@@ -87,7 +87,7 @@ var wsCache = new webStorageCache();
 export default {
   computed: {
     user() {
-      return this.$store.getters['admin/getUser'];
+      return this.$store.getters["admin/getUser"];
     }
   },
   methods: {
@@ -103,19 +103,17 @@ export default {
           result => {
             wsCache.delete("token");
             // this.$store.commit("admin/changeUser", {});
-            window.location.href = '/admin/login.html';
+            window.location.href = "/admin/login.html";
           },
           err => {
             console.log(err);
           }
         );
     },
-    routerPush(url){
+    routerPush(url) {
       this.$router.push(url);
     }
   },
-  created() {
-    
-  }
+  created() {}
 };
 </script>

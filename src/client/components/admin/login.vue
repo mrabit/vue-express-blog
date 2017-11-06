@@ -4,6 +4,11 @@
     width: 200px;
     input {
       border-radius: 0 !important;
+      height: 36px;
+    }
+    button {
+      width: 45px;
+      padding: 0;
     }
   }
   .el-input-group__append,
@@ -11,9 +16,12 @@
     background-color: #27c24c;
     border-color: #27c24c;
   }
-  .el-tabs__item:hover {
-    color: #409eff;
-    cursor: pointer;
+  .el-tabs__item {
+    color: #8391a5;
+    &:hover {
+      color: #409eff;
+      cursor: pointer;
+    }
   }
   .qrcode {
     width: 150px;
@@ -35,7 +43,7 @@
                       <el-tab-pane label="二维码登录" name="QRCode">
                         <div id="qrcode">
                           <img :src="qrcode_url" alt="" @click="sendMessage(guid())">
-                          <p class="text-center">{{ qrcode_message }}</p>
+                          <p class="text-center m-t-md">{{ qrcode_message }}</p>
                         </div>
                       </el-tab-pane>
                       <el-tab-pane label="密码登录" name="passwd">
@@ -162,11 +170,11 @@ export default {
       };
       this.wss.onclose = _ => {
         this.wss = null;
-      }
+      };
     },
     sendMessage(msg) {
       // socket连接断开,重新创建服务
-      if(!this.wss){
+      if (!this.wss) {
         this.createSocket();
         return false;
       }
