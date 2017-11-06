@@ -65,4 +65,60 @@ router.get('/getLocation', (req, res) => {
     });
 })
 
+router.get('/getAuthList/:page/:length', (req, res) => {
+    var params = {
+        page: parseInt(req.params.page) || 1,
+        length: parseInt(req.params.length) || 10
+    }
+    wx_auth.getAuthList(params).then(aaData => {
+        return wx_auth.getAuthCount().then(count => {
+            res.json({
+                code: 200,
+                success: true,
+                result: {
+                    aaData,
+                    count
+                }
+            });
+        })
+    }, err => res.end(err));
+})
+
+router.post('/addAuth', (req, res) => {
+    var params = {
+        OPEN_ID: req.body.OPEN_ID,
+        nick_name: req.body.nick_name,
+        create_time: (Date.parse(new Date()) / 1000)
+    };
+    wx_auth.insert_auth(params).then(result => {
+        res.json({
+            code: 200,
+            success: true,
+            result
+        });
+    }, err => res.end(err));
+})
+
+router.post('/deleteAuth', (req, res) => {
+    var id = req.body.id;
+    wx_auth.deleteAuth(id).then(result => {
+        res.json({
+            code: 200,
+            success: true,
+            result
+        })
+    }, err => res.end(err));
+})
+
+router.get('/getAuthDetails/:id', (req, res) => {
+    var id = req.params.id;
+    wx_auth.getAuthDetails(id).then(result => {
+        res.json({
+            code: 200,
+            success: true,
+            result
+        })
+    }, err => res.end(err));
+})
+
 module.exports = router;
