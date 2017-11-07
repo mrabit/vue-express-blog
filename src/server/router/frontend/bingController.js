@@ -6,7 +6,7 @@ var qiniu_model = require('../../model/qiniu');
 var qiniu_config = require('../../config')['qiniu'];
 var common = require('../../common');
 
-router.get('/', function (req, res) {
+router.get('/', function(req, res) {
     Bing.get_image_by_time(moment().format('YYYY-MM-DD')).then(result => {
         if (result.length <= 0) {
             res.json({
@@ -49,8 +49,8 @@ router.get('/add_info', (req, res) => {
         }
     }, err => {
         res.json(err);
-    }).then(_ => {
-        return common.get_request('http://cn.bing.com/HPImageArchive.aspx')
+    }).then(params => {
+        return common.get_request('http://cn.bing.com/HPImageArchive.aspx', params)
     }).then(bing_data => {
         //url地址
         var urlbase = 'http://s.cn.bing.net' + bing_data.images[0]['urlbase'];
@@ -132,7 +132,7 @@ router.get('/add_info', (req, res) => {
  * @param int length 每页条数
  * @return mixed
  */
-router.get('/get_img_lists/:page/:length', function (req, res) {
+router.get('/get_img_lists/:page/:length', function(req, res) {
     var params = {
         page: parseInt(req.params.page) || 1,
         length: parseInt(req.params.length) || 5
