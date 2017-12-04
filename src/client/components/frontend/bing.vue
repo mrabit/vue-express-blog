@@ -12,9 +12,9 @@
                     <p class="article-title h2">Bing每日一图</p>
                     <div class="entry-content m-t-md">
                         <section class="bing_main">
-                            <div class="bing_article" @click="open_url(item.img_url)" :data-description="item.img_time" v-for="(item, index) in img_lists" :key="index"
+                            <div class="bing_article" @click="open_url(format_img_url(item.img_url))" :data-description="item.img_time" v-for="(item, index) in img_lists" :key="index"
                                 :data-title="item.img_title">
-                                <img :src="item.img_url + '-preview.50p'"
+                                <img :src="format_img_url(item.img_url) + '-preview.50p'"
                                     :title="item.img_title"
                                     :alt="item.img_title">
                             </div>
