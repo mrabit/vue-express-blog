@@ -129,6 +129,9 @@ export default {
           var data = d.data;
           if (data.success) {
             var result = data.result;
+            if (result.article.length <= 0) {
+                return this.$router.push('/404.html');
+            }
             this.article = result.article[0];
             this.adjoin = result.adjoin;
             document.title = result.article[0].title + "一桶浆糊的博客";

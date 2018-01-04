@@ -22,6 +22,24 @@ var wsCache = new webStorageCache();
 
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title + ' - 一桶浆糊的博客';
+    var path = to.path;
+    // tp3.2路由地址跳转
+    // 标签页匹配
+    // /index/index/tags_id/16.html
+    var reg3 = /^(\/home|)\/index\/.*?\/tags_id\/(\d+).html/;
+    if (reg3.test(path)) {
+        return next(path.replace(reg3, "/index.html?tags_id=$2"));
+    }
+    // 其余页面匹配
+    // /index/index/page/2.html
+    // /home/index/details/id/34.html
+    // /home/tags/index.html
+    var reg = /^(\/home|)\/index(\/.*?)\/.*?(\/\d+.html)/;
+    var reg2 = /^(\/home|)(\/.*?)\/index(.html)/;
+    var strReplace = reg.test(path) ? reg : (reg2.test(path) ? reg2 : null);
+    if (strReplace) {
+        return next(path.replace(strReplace, "$2$3"));
+    }
     var user = wsCache.get('token');
     // 登录页, 存在登录信息, 调用接口判断token生效则跳转后台首页
     if (to.meta.login && user) {

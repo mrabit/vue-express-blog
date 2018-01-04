@@ -117,7 +117,13 @@
 .el-menu--collapse,
 .el-menu--collapse .el-menu-item {
     width: 60px;
-} // side背景颜色
+}
+
+.app-aside-folded .el-menu--collapse {
+    width: 60px;
+}
+
+// side背景颜色
 .el-submenu .el-menu,
 .el-submenu .el-menu-item {
     background-color: #1f2d3d!important;
@@ -133,4 +139,8 @@
         height: 40px;
         padding: 0 5px!important;
     }
+}
+
+.editormd-dialog-header {
+    line-height: initial;
 }
