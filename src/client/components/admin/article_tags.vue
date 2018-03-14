@@ -31,18 +31,38 @@ export default {
   data() {
     return {
       tags: [
-        { name: "标签一", type: "" },
-        { name: "标签二", type: "gray" },
-        { name: "标签三", type: "primary" },
-        { name: "标签四", type: "success" },
-        { name: "标签五", type: "warning" },
-        { name: "标签六", type: "danger" }
+      ],
+      tags_type: [
+        '',
+        'gray',
+        'primary',
+        'success',
+        'warning',
+        'danger',
       ],
       loading: true
     };
   },
-  mounted() {
-    this.loading = false;
+  methods: {
+    get_all_tags() {
+      this.loading = true;
+      this.$http.get("/api/tags/get_all_tags").then(d => {
+        const data = d.data;
+        if(data.success) {
+          this.tags = data.result.map((k,v) => {
+            return {
+              name: k.tags_name,
+              id: k.id,
+              type: this.tags_type[Math.floor(Math.random()*(this.tags_type.length-0+1)+0)]
+            }
+          });
+          this.loading = false;
+        }
+      });
+    }
+  },
+  created() {
+    this.get_all_tags();
   }
 };
 </script>

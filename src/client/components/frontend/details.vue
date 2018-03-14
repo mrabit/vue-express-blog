@@ -130,21 +130,27 @@ export default {
           if (data.success) {
             var result = data.result;
             if (result.article.length <= 0) {
-                return this.$router.push('/404.html');
+              return this.$router.push("/404.html");
             }
             this.article = result.article[0];
             this.adjoin = result.adjoin;
             document.title = result.article[0].title + "一桶浆糊的博客";
             this.loading = false;
             this.$nextTick(() => {
-              editormd.markdownToHTML("editormd", {
-                htmlDecode: "style,script,iframe", // you can filter tags decode
-                emoji: true,
-                taskList: true,
-                tex: true, // 默认不解析
-                flowChart: true, // 默认不解析
-                sequenceDiagram: true // 默认不解析
-              });
+                editormd.markdownToHTML("editormd", {
+                    htmlDecode: "style,script,iframe", // you can filter tags decode
+                    emoji: true,
+                    taskList: true,
+                    tex: true, // 默认不解析
+                    flowChart: true, // 默认不解析
+                    sequenceDiagram: true // 默认不解析
+                });
+
+                // 找出页面所有a标签,设置其target属性为_blank
+                var aTagArr = [].slice.apply(document.getElementById('entry-content').getElementsByTagName("a"));
+                aTagArr.forEach(function(e, i) {
+                    !e.getAttribute("target") ? (e.setAttribute('target','_blank')) : null;
+                });
             });
           }
         });
