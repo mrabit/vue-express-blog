@@ -28,48 +28,46 @@
     height: 150px;
   }
 }
+
 </style>
 </style>
 <template>
-<section class="app-content m-l-none login">
-        <div class="modal-over bg-black" >
-            <div class="verticalCenter w-full h-full">
-                <div class=" animated fadeInUp text-center" style="width:300px;">
-                    <div class="thumb-lg">
-                        <img src="/Uploads/Picture/2017-06-06/59369fb016efa.png" class="img-circle">
-                    </div>
-                    <p class="h4 m-t m-b">{{ formData.uname }}</p>
-                    <el-tabs v-model="activeName">
-                      <el-tab-pane label="二维码登录" name="QRCode">
-                        <div id="qrcode">
-                          <img :src="qrcode_url" alt="" @click="sendMessage(guid())">
-                          <p class="text-center m-t-md">{{ qrcode_message }}</p>
-                        </div>
-                      </el-tab-pane>
-                      <el-tab-pane label="密码登录" name="passwd">
-                        <el-form :inline="true" :model="formData" :rules="rules" class="m-t" ref="formData">
-                          <el-form-item>
-                            <el-input type="password" placeholder="输入密码进行下一步" class="hide"></el-input>
-                          </el-form-item>
-                          <el-form-item>
-                              <el-input type="password" placeholder="输入密码进行下一步" v-model="formData.upwd" class="input-with-login"
-                                  @focus="formData.visibility = false" @keyup.enter.native="submitForm('formData')" :disabled="formData.logining">
-                                  <el-button slot="append" class="btn btn-success no-border" type="button" @click="submitForm('formData')">
-                                      <i class="fa fa-arrow-right" :class="{'fa-spin fa-spinner': formData.logining}"></i>
-                                  </el-button>
-                              </el-input>
-                              <span v-if="!formData.logining" class="help-block m-b-none text-danger m-t-none text-left text-xs" :style="{ visibility: formData.visibility?'visible':'hidden' }"
-                              style="line-height: 18px">{{ formData.error }}</span>
-                              <span v-if="formData.logining" class="help-block m-b-none text-success m-t-none text-left text-xs" :style="{ visibility: formData.logining?'visible':'hidden' }"
-                              style="line-height: 18px">正在登录, 请稍候...</span>
-                          </el-form-item>
-                        </el-form>
-                      </el-tab-pane>
-                    </el-tabs>
-                </div>
-            </div>
+  <section class="app-content m-l-none login">
+    <div class="modal-over bg-black">
+      <div class="verticalCenter w-full h-full">
+        <div class=" animated fadeInUp text-center" style="width:300px;">
+          <div class="thumb-lg">
+            <img src="/Uploads/Picture/2017-06-06/59369fb016efa.png" class="img-circle">
+          </div>
+          <p class="h4 m-t m-b">{{ formData.uname }}</p>
+          <el-tabs v-model="activeName">
+            <el-tab-pane label="二维码登录" name="QRCode">
+              <div id="qrcode">
+                <img :src="qrcode_url" alt="" @click="sendMessage(guid())">
+                <p class="text-center m-t-md">{{ qrcode_message }}</p>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="密码登录" name="passwd">
+              <el-form :inline="true" :model="formData" :rules="rules" class="m-t" ref="formData">
+                <el-form-item>
+                  <el-input type="password" placeholder="输入密码进行下一步" class="hide"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-input type="password" placeholder="输入密码进行下一步" v-model="formData.upwd" class="input-with-login" @focus="formData.visibility = false" @keyup.enter.native="submitForm('formData')" :disabled="formData.logining">
+                    <el-button slot="append" class="btn btn-success no-border" type="button" @click="submitForm('formData')">
+                      <i class="fa fa-arrow-right" :class="{'fa-spin fa-spinner': formData.logining}"></i>
+                    </el-button>
+                  </el-input>
+                  <span v-if="!formData.logining" class="help-block m-b-none text-danger m-t-none text-left text-xs" :style="{ visibility: formData.visibility?'visible':'hidden' }" style="line-height: 18px">{{ formData.error }}</span>
+                  <span v-if="formData.logining" class="help-block m-b-none text-success m-t-none text-left text-xs" :style="{ visibility: formData.logining?'visible':'hidden' }" style="line-height: 18px">正在登录, 请稍候...</span>
+                </el-form-item>
+              </el-form>
+            </el-tab-pane>
+          </el-tabs>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </template>
 <script>
 var WebStorageCache = require("web-storage-cache");
@@ -104,9 +102,14 @@ export default {
         logining: false
       },
       rules: {
-        upwd: [
-          { validator: validatePass, trigger: "change" },
-          { validator: validateLength, trigger: "change" }
+        upwd: [{
+            validator: validatePass,
+            trigger: "change"
+          },
+          {
+            validator: validateLength,
+            trigger: "change"
+          }
         ]
       },
       wss: null,
@@ -182,16 +185,16 @@ export default {
     },
     loginSuccess(token, user) {
       wsCache.set(
-        "token",
-        {
+        "token", {
           token: token,
           user: user
-        },
-        { exp: 60 * 60 }
+        }, {
+          exp: 60 * 60
+        }
       );
       // 关闭login时创建的websocket
       this.wss.close();
-      this.$store.commit("admin/changeUser", user);
+      this.$store.commit("CHANGE_USER", user);
       this.$router.push("/admin/index.html");
     },
     guid() {
@@ -221,4 +224,5 @@ export default {
     this.createSocket();
   }
 };
+
 </script>

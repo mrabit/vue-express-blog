@@ -113,7 +113,7 @@ export default {
             header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
         }
     }, {
-        path: '/admin/*',
+        path: '*',
         components: {
             default: NotFoundComponent,
             side: (resolve) => void(require(['../components/admin/common/side.vue'], resolve)),

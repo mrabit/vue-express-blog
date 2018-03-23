@@ -20,37 +20,44 @@
   right: 2px;
   top: 2px;
 }
-</style>
 
+</style>
 <template>
-    <section class="content">
-        <div class="wrapper">
-            <section class="row padder">
-                <loading :show="!tags_arr.length"></loading>
-                <article class="col-xs-12 padder-v" v-if="tags_arr.length">
-                    <p class="article-title h2">标签</p>
-                    <div class="entry-content m-t-md">
-                        <div class="tags_group">
-                            <router-link v-for="(vo, key) in tags_arr" :key="key" class="label inline m-t-sm tags m-r-sm " :to="'/index.html?tags_id=' + vo.id">
-                                {{ vo.tags_name }}（{{ vo.counts }}）
-                            </router-link>
-                        </div>
-                    </div>
-                </article>
-            </section>
-        </div>
-    </section>
+  <section class="content">
+    <div class="wrapper">
+      <section class="row padder">
+        <loading :show="!tags_arr.length"></loading>
+        <article class="col-xs-12 padder-v" v-if="tags_arr.length">
+          <p class="article-title h2">标签</p>
+          <div class="entry-content m-t-md">
+            <div class="tags_group">
+              <router-link v-for="(vo, key) in tags_arr" :key="key" class="label inline m-t-sm tags m-r-sm " :to="'/index.html?tags_id=' + vo.id">
+                {{ vo.tags_name }}（{{ vo.counts }}）
+              </router-link>
+            </div>
+          </div>
+        </article>
+      </section>
+    </div>
+  </section>
 </template>
 <script>
+import {
+  mapState,
+  mapActions,
+  mapMutations,
+  mapGetters
+} from 'vuex'
 import loading from "../loading";
 export default {
   components: {
     loading
   },
-  data() {
-    return {
-      tags_arr: []
-    };
+  computed: {
+    ...mapState({}),
+    ...mapGetters({
+      tags_arr: 'getTagsArr'
+    })
   },
   methods: {
     get_tags() {
@@ -67,7 +74,9 @@ export default {
     }
   },
   mounted() {
-    this.get_tags();
+    this.$store.dispatch('getTags');
+    // this.get_tags();
   }
 };
+
 </script>
