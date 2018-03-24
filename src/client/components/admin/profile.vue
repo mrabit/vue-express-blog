@@ -1,44 +1,47 @@
 <template>
-<section class="app-content">
+  <section class="app-content">
     <div class="app-content-body">
-        <loading :show="loading"></loading>
-        <div v-show="!loading">
-            <div class="bg-light lter b-b wrapper-md">
-            <h1 class="m-n font-thin h3">修改资料</h1>
-            </div>
-            <div class="wrapper clearfix m-b-md">
-                <el-row :gutter="20">
-                    <el-col :span="14" :offset="5">
-                        <el-form :rules="rules" ref="profile" :model="profile" label-width="160px">
-                            <el-form-item label="输入用户名：" prop="uname">
-                                <el-input disabled="disabled" v-model="profile.uname"></el-input>
-                            </el-form-item>
-                            <el-form-item label="输入博客名称：" prop="blog_name">
-                                <el-input v-model="profile.blog_name"></el-input>
-                            </el-form-item>
-                            <el-form-item label="输入微博链接：" prop="weibo">
-                                <el-input v-model="profile.weibo"></el-input>
-                            </el-form-item>
-                            <el-form-item label="输入github链接：" prop="github">
-                                <el-input v-model="profile.github"></el-input>
-                            </el-form-item>
-                            <el-form-item label="输入twitter链接：" prop="twitter">
-                                <el-input v-model="profile.twitter"></el-input>
-                            </el-form-item>
-                            <el-form-item class="pull-right">
-                                <el-button type="primary" @click="onSubmit('profile')">立即更新</el-button>
-                                <el-button>取消</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                </el-row>
-            </div>
+      <loading :show="loading"></loading>
+      <div v-show="!loading">
+        <div class="bg-light lter b-b wrapper-md">
+          <h1 class="m-n font-thin h3">修改资料</h1>
         </div>
+        <div class="wrapper clearfix m-b-md">
+          <el-row :gutter="20">
+            <el-col :span="14" :offset="5">
+              <el-form :rules="rules" ref="profile" :model="profile" label-width="160px">
+                <el-form-item label="输入用户名：" prop="uname">
+                  <el-input disabled="disabled" v-model="profile.uname"></el-input>
+                </el-form-item>
+                <el-form-item label="输入博客名称：" prop="blog_name">
+                  <el-input v-model="profile.blog_name"></el-input>
+                </el-form-item>
+                <el-form-item label="输入微博链接：" prop="weibo">
+                  <el-input v-model="profile.weibo"></el-input>
+                </el-form-item>
+                <el-form-item label="输入github链接：" prop="github">
+                  <el-input v-model="profile.github"></el-input>
+                </el-form-item>
+                <el-form-item label="输入twitter链接：" prop="twitter">
+                  <el-input v-model="profile.twitter"></el-input>
+                </el-form-item>
+                <el-form-item class="pull-right">
+                  <el-button type="primary" @click="onSubmit('profile')">立即更新</el-button>
+                  <el-button>取消</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
     </div>
-</section>
+  </section>
 </template>
 <script>
 import loading from "../loading";
+import {
+  mapGetters
+} from 'vuex';
 export default {
   components: {
     loading
@@ -56,27 +59,56 @@ export default {
       profile: {},
       loading: true,
       rules: {
-        uname: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-        blog_name: [{ required: true, message: "请输入博客名称", trigger: "blur" }],
-        weibo: [
-          { required: true, message: "请输入微博链接", trigger: "blur" },
-          { validator: checkUrl, trigger: "blur" }
+        uname: [{
+          required: true,
+          message: "请输入用户名",
+          trigger: "blur"
+        }],
+        blog_name: [{
+          required: true,
+          message: "请输入博客名称",
+          trigger: "blur"
+        }],
+        weibo: [{
+            required: true,
+            message: "请输入微博链接",
+            trigger: "blur"
+          },
+          {
+            validator: checkUrl,
+            trigger: "blur"
+          }
         ],
-        github: [
-          { required: true, message: "请输入github链接", trigger: "blur" },
-          { validator: checkUrl, trigger: "blur" }
+        github: [{
+            required: true,
+            message: "请输入github链接",
+            trigger: "blur"
+          },
+          {
+            validator: checkUrl,
+            trigger: "blur"
+          }
         ],
-        twitter: [
-          { required: true, message: "请输入twitter链接", trigger: "blur" },
-          { validator: checkUrl, trigger: "blur" }
+        twitter: [{
+            required: true,
+            message: "请输入twitter链接",
+            trigger: "blur"
+          },
+          {
+            validator: checkUrl,
+            trigger: "blur"
+          }
         ]
       }
     };
   },
   computed: {
-    user() {
-      return this.$store.getters["admin/getUser"];
-    }
+    ...mapGetters({
+      user: 'getUser'
+    })
+  },
+  watch: {
+    'user': 'get_profile'
   },
   methods: {
     get_profile() {
@@ -130,7 +162,8 @@ export default {
     }
   },
   mounted() {
-    this.get_profile();
+    this.$store.dispatch('getUserInfo');
   }
 };
+
 </script>

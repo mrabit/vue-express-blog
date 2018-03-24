@@ -74,10 +74,10 @@ export default {
           href: "/bing.html"
         },
         {
-          title: "分享",
-          span: "分享",
+          title: "友链",
+          span: "友链",
           icons: "iconfont fa fa-share-alt",
-          href: "/share.html"
+          href: "/links.html"
         }
       ],
       share_btn: [{

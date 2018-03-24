@@ -35,9 +35,9 @@ export default {
     })
   },
   watch: {
-    user(val) {
+    user() {
+      this.loading = false;
       this.$nextTick(_ => {
-        this.loading = false;
         editormd.markdownToHTML("editormd", {
           htmlDecode: "style,script,iframe", // you can filter tags decode
           emoji: true,
@@ -50,7 +50,7 @@ export default {
     }
   },
   mounted() {
-
+    this.$store.dispatch('getUserInfo');
   }
 };
 

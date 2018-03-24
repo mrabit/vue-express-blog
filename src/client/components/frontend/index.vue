@@ -111,9 +111,11 @@ export default {
   watch: {
     $route: "get_lists",
     tags_arr(val) {
+      if (!this.tags_id) return;
       this.tags_name = val.filter(k => {
         return k.id == this.tags_id
-      })[0]['tags_name']
+      })[0]['tags_name'];
+      document.title = "标签 - " + this.tags_name + " - 一桶浆糊的博客";
     }
   },
   methods: {

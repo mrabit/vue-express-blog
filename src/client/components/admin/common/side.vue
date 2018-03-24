@@ -72,6 +72,15 @@
       <el-submenu index="4" class="bg-dark">
         <template slot="title">
           <i class="el-icon-message"></i>
+          <span slot="title">友链管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/admin/links.html">友链配置</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+      <el-submenu index="5" class="bg-dark">
+        <template slot="title">
+          <i class="el-icon-message"></i>
           <span slot="title">用户管理</span>
         </template>
         <el-menu-item-group>

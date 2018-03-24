@@ -4,7 +4,7 @@
       <loading :show="loading"></loading>
       <div v-show="!loading">
         <div class="bg-light lter b-b wrapper-md">
-          <h1 class="m-n font-thin h3">微信权限管理</h1>
+          <h1 class="m-n font-thin h3">友链配置</h1>
         </div>
         <div class="wrapper clearfix m-b-md">
           <div class="pull-right m-b-sm">
@@ -13,14 +13,14 @@
           <el-table :data="tableData" stripe class="w-full">
             <el-table-column prop="id" label="ID" width="80">
             </el-table-column>
-            <el-table-column prop="OPEN_ID" label="OPEN_ID">
+            <el-table-column prop="site_name" label="网站名称">
             </el-table-column>
-            <el-table-column prop="nick_name" label="昵称" width="180">
+            <el-table-column prop="site_url" label="网站地址" width="300">
               <template slot-scope="scope">
-                <span>{{ scope.row.nick_name }}</span>
+                <a :href="scope.row.site_url" target="_blank">{{ scope.row.site_url }}</a>
               </template>
             </el-table-column>
-            <el-table-column prop="release_time" label="发布时间" width="180">
+            <el-table-column prop="release_time" label="添加时间" width="180">
             </el-table-column>
             <el-table-column label="操作" width="220">
               <template slot-scope="scope">
@@ -47,11 +47,11 @@
                   <el-form-item label="ID：" v-if="formData.id" prop="id">
                     <el-input v-model="formData.id" disabled="disabled"></el-input>
                   </el-form-item>
-                  <el-form-item label="OPEN_ID：" prop="OPEN_ID">
-                    <el-input v-model="formData.OPEN_ID"></el-input>
+                  <el-form-item label="网站名称:" prop="site_name">
+                    <el-input v-model="formData.site_name"></el-input>
                   </el-form-item>
-                  <el-form-item label="昵称：" prop="nick_name" width="180">
-                    <el-input v-model="formData.nick_name"></el-input>
+                  <el-form-item label="网站地址:" prop="site_url" width="180">
+                    <el-input v-model="formData.site_url"></el-input>
                   </el-form-item>
                   <el-form-item class="pull-right m-b-none">
                     <el-button type="primary" @click="handleSubmit('formData')">立即{{!formData.id?'新增':'修改'}}</el-button>
@@ -73,23 +73,36 @@ export default {
     loading
   },
   data() {
+    var checkUrl = (rule, value, callback) => {
+      var reg = new RegExp("[a-zA-z]+://[^s]*", "ig");
+      if (reg.test(value)) {
+        callback();
+      } else {
+        callback(new Error("请输入正确的链接地址."));
+      }
+    };
     return {
       formData: {
         id: 0,
-        OPEN_ID: "",
-        nick_name: ""
+        site_name: "",
+        site_url: ""
       },
       formData_rule: {
-        OPEN_ID: [{
+        site_name: [{
           required: true,
-          message: "请输入用户的OPEN_ID",
+          message: "请输入网站名称",
           trigger: "blur"
         }],
-        nick_name: [{
-          required: true,
-          message: "请输入用户昵称",
-          trigger: "blur"
-        }]
+        site_url: [{
+            required: true,
+            message: "请输入网站地址",
+            trigger: "blur"
+          },
+          {
+            validator: checkUrl,
+            trigger: "blur"
+          }
+        ]
       },
       tableData: [],
       loading: true,
@@ -106,7 +119,7 @@ export default {
       this.pagination.currentPage = currentPage;
       return this.$http
         .get(
-          "/api/wx/getAuthList/" + currentPage + "/" + this.pagination.pageSize
+          "/api/links/getLinksList/" + currentPage + "/" + this.pagination.pageSize
         )
         .then(d => {
           if (d.data.success) {
@@ -119,14 +132,14 @@ export default {
     handleSubmit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var url = "/api/wx/addAuth";
+          var url = "/api/links/addLinks";
           if (this.formData.id) {
-            url = "/api/wx/updateAuth";
+            url = "/api/links/updateLinks";
           }
           this.$http.post(url, this.formData).then(result => {
             this.$notify({
               title: "成功",
-              message: (!this.formData.id ? "新增" : "修改") + "用户成功!",
+              message: (!this.formData.id ? "新增" : "修改") + "友链成功!",
               type: "success",
               position: "bottom-right"
             });
@@ -140,12 +153,12 @@ export default {
       });
     },
     handleDelete(id) {
-      this.$http.post("/api/wx/deleteAuth", {
+      this.$http.post("/api/links/deleteLinks", {
         id
       }).then(d => {
         this.$notify({
           title: "成功",
-          message: "删除用户成功!",
+          message: "删除友链成功!",
           type: "success",
           position: "bottom-right"
         });
@@ -153,7 +166,7 @@ export default {
       });
     },
     handleEdit(id) {
-      this.$http.get("/api/wx/getAuthDetails/" + id).then(d => {
+      this.$http.get("/api/links/getLinksDetails/" + id).then(d => {
         if (d.data.success) {
           this.formData = d.data.result;
           this.dialogVisible = true;
@@ -166,8 +179,8 @@ export default {
     dialogClose() {
       this.formData = {
         id: 0,
-        OPEN_ID: "",
-        nick_name: ""
+        site_name: "",
+        site_url: ""
       };
     }
   },

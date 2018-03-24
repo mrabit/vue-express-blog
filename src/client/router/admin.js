@@ -113,6 +113,17 @@ export default {
             header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
         }
     }, {
+        path: 'links.html',
+        meta: {
+            title: '友链配置',
+            requireAuth: true
+        },
+        components: {
+            default: (resolve) => void(require(['../components/admin/links.vue'], resolve)),
+            side: (resolve) => void(require(['../components/admin/common/side.vue'], resolve)),
+            header: (resolve) => void(require(['../components/admin/common/header.vue'], resolve)),
+        }
+    }, {
         path: '*',
         components: {
             default: NotFoundComponent,
